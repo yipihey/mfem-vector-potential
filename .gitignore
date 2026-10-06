@@ -1,0 +1,8 @@
+external/
+build/
+*.o
+*.a
+*.so
+results/**/*.gf
+results/**/*.mesh
+__pycache__/
