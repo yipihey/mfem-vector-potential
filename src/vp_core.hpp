@@ -190,7 +190,7 @@ enum class ProjMode { Pointwise, Integrated };
 ///    the sub-faces (RT) -- the same functionals as MFEM's IntegratedGLL basis
 ///    (ND_HexahedronElement::ProjectIntegrated, RT_HexahedronElement::
 ///    ProjectIntegrated), but evaluated with an nq-point Gauss rule per
-///    direction (nq<=0: p+q+5) instead of MFEM's order-p rule, so that they are
+///    direction (nq<=0: min(p+q+5, 8)) instead of MFEM's order-p rule, so that they are
 ///    exact to roundoff for smooth fields.  MFEM's own routines are protected,
 ///    use a low-order rule, and its integrated bases are not supported by the
 ///    curl/gradient interpolators (they assume nodal dofs), so we compute

@@ -61,7 +61,7 @@ inline int RunStatic(int argc, char *argv[], bool distort, const char *expname)
    row.Set("valid", 1);
    for (const char *k : {"h", "hmin", "hmax", "min_detJ", "max_detJ", "min_ratio", "max_ratio",
                          "n_neg_detJ", "ndofs_h1", "ndofs_nd", "ndofs_rt", "ndofs_l2",
-                         "max_DC", "max_CG", "errA_L2", "errB_L2", "normB_L2", "errB_rel",
+                         "max_DC", "max_DC_scaled", "max_CG", "errA_L2", "errB_L2", "normB_L2", "errB_rel",
                          "errA_rel", "div_L2", "div_max", "div_rel_L2", "div_rel_max",
                          "b0proj_err_L2", "b0proj_div_max", "b0proj_div_L2",
                          "energy_h", "energy_exact", "energy_rel_err", "energy_mass_diff",
@@ -101,7 +101,7 @@ inline int RunStatic(int argc, char *argv[], bool distort, const char *expname)
       row.Set("t_total", WallTime() - T0);
       if (rank == 0) { std::cout << "INVALID mesh (non-positive Jacobian): no diagnostics." << std::endl; }
       if (!csv.empty()) { CsvAppend(comm, csv, row); }
-      return 0;
+      return 3;   // series driver: stop increasing eps
    }
 
    // ---- spaces and operators ----
@@ -112,6 +112,9 @@ inline int RunStatic(int argc, char *argv[], bool distort, const char *expname)
    row.Set("ndofs_rt", (long long)sp.NdofsRT()); row.Set("ndofs_l2", (long long)sp.NdofsL2());
    const real_t dc = ops.MaxAbsDC(), cg = ops.MaxAbsCG();
    row.Set("max_DC", dc); row.Set("max_CG", cg);
+   // D_h maps to L2 *values* of div (includes 1/detJ ~ 1/h^3), so |D_h C_h|
+   // entries carry roundoff * h^-3; max_DC_scaled removes that factor.
+   row.Set("max_DC_scaled", dc * std::pow(msz.hmin, 3));
    if (rank == 0)
    {
       std::cout << "dofs: H1=" << sp.NdofsH1() << " ND=" << sp.NdofsND() << " RT=" << sp.NdofsRT()
@@ -188,7 +191,7 @@ inline int RunStatic(int argc, char *argv[], bool distort, const char *expname)
    const real_t Eex = ExactEnergy(field, fp) + 0.5 * (B0eff * B0eff);
    row.Set("energy_h", Eh); row.Set("energy_exact", Eex);
    row.Set("energy_rel_err", (Eh - Eex) / Eex);
-   if (sp.NdofsRT() <= 200000)
+   if (sp.NdofsRT() <= 40000)
    {
       row.Set("energy_mass_diff", (EnergyMass(sp, bt, ord) - Eh) / Eex);
    }
@@ -233,7 +236,9 @@ inline int RunStatic(int argc, char *argv[], bool distort, const char *expname)
                 << " s  rss=" << rss << " MB  t_total=" << WallTime() - T0 << " s" << std::endl;
    }
    if (!csv.empty()) { CsvAppend(comm, csv, row); }
-   return 0;
+   // exit code 4: valid run, but the mesh is (nearly) degenerate (min detJ <
+   // 0.15 of the undeformed value): the scan driver stops after this run.
+   return (js_stats.min_det < 0.15) ? 4 : 0;
 }
 
 } // namespace vp

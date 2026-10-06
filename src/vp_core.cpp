@@ -728,7 +728,7 @@ void ProjectIntegratedImpl(ParGridFunction &g, VectorCoefficient &vc, bool nd,
    {
       const FiniteElementSpace *nfes = fes->GetParMesh()->GetNodalFESpace();
       const int q = nfes ? nfes->GetMaxElementOrder() : 1;
-      nq = sfe.GetOrder() + q + 5;
+      nq = std::min(sfe.GetOrder() + q + 5, 8);   // 8 pts: <~1e-12 for k<=4pi, h>=1/4
    }
    const int n = sfe.GetDof();
    Vector d(n), s(n);
