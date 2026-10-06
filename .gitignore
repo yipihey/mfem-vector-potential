@@ -6,3 +6,4 @@ build/
 results/**/*.gf
 results/**/*.mesh
 __pycache__/
+bin/
