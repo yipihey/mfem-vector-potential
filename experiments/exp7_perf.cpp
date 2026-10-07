@@ -210,6 +210,7 @@ int main(int argc, char *argv[])
 
    // ---------------- 5. gauge fix (A-route) ----------------
    double t_gsetup = 0, t_gfirst = 0, t_gauge = 1e300;
+   row.Set("rss_gauge_mb", 0.0);
    int g_iters = 0;
    if (isA && gspec.On())
    {
