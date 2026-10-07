@@ -1,0 +1,30 @@
+  (i) max |FD - analytic grad f| = 6.70075e-11 (variants 1,2,3)
+[PASS] (i) grad f finite-difference check
+  (ii) eps=0.3 s=1: max residual 9.99201e-15, mean Newton its 3.39625, max 4
+[PASS] (ii) Newton inverse residual < 1e-13, eps=0.300000
+  (ii) eps=0.6 s=1: max residual 9.99201e-15, mean Newton its 4.0947, max 6
+[PASS] (ii) Newton inverse residual < 1e-13, eps=0.600000
+  (iii) K=0 eps=0.6 p=3 b0 off: ||a_T-a_0||_inf=0 ||b_T-b_0||_inf=0
+        errB(0)=0.00151531 errB(T)=0.00151531 peak errB=0.00173265 at step 10 (ratio 1.14342)
+        max|H/H0-1|=4.44089e-16 max flux err=7.49401e-16 max scaled div=3.1947e-15 min detJ=0.639109
+        E err rel: t=0 7.67285e-07, worst over t 1.61694e-06 (x2.10736 of t=0)
+[PASS] (iii) dofs constant (inf-norm change == 0), K=0 eps=0.6 p=3 b0 off
+[PASS] (iii) final B error equals initial to 1e-14, K=0 eps=0.6 p=3 b0 off
+[PASS] (iii) final energy equals initial, K=0 eps=0.6 p=3 b0 off
+[PASS] (iii) helicity constant to roundoff, K=0 eps=0.6 p=3 b0 off
+[PASS] (iii) slice fluxes constant to roundoff, K=0 eps=0.6 p=3 b0 off
+[PASS] (iii) scaled div at roundoff at every step, K=0 eps=0.6 p=3 b0 off
+  (iii) K=0 eps=0.6 p=3 b0 on: ||a_T-a_0||_inf=0 ||b_T-b_0||_inf=0
+        errB(0)=0.00151168 errB(T)=0.00151168 peak errB=0.0017294 at step 10 (ratio 1.14403)
+        max|H/H0-1|=0 max flux err=1.19349e-15 max scaled div=3.20847e-15 min detJ=0.639109
+        E err rel: t=0 7.6361e-07, worst over t 1.61317e-06 (x2.11256 of t=0)
+[PASS] (iii) dofs constant (inf-norm change == 0), K=0 eps=0.6 p=3 b0 on
+[PASS] (iii) final B error equals initial to 1e-14, K=0 eps=0.6 p=3 b0 on
+[PASS] (iii) final energy equals initial, K=0 eps=0.6 p=3 b0 on
+[PASS] (iii) slice fluxes constant to roundoff, K=0 eps=0.6 p=3 b0 on
+[PASS] (iii) scaled div at roundoff at every step, K=0 eps=0.6 p=3 b0 on
+  (iv) after moving to eps=0.6,s=1: max|C-C'|=0 max|G-G'|=0 ; D' = diag(r) D with r in [0.738106, 1.55114] (row-proportionality defect 1.52163e-12) ; max|D' C|=1.81899e-12 (D C stale: 1.81899e-12, entries of D are O(N^3 p^2)) max|C G|=0
+[PASS] (iv) C_h and G_h independent of the node positions (bitwise)
+[PASS] (iv) D_h = row scaling of the reference D_h, D_h C_h = 0 to roundoff
+  (iv) info: max |label interpolated from the label dofs - Phi^{-1}(x_h)| at quadrature points (s=1, eps=0.6, q=3, N=8) = 5.00362e-05
+SELFTEST PASSED (0 failures)
