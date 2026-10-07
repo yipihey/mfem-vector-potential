@@ -1,0 +1,329 @@
+diff --git a/MHD.cpp b/MHD.cpp
+index 0d6084f..39d00e4 100644
+--- a/MHD.cpp
++++ b/MHD.cpp
+@@ -624,6 +624,37 @@ int main(int argc, char *argv[])
+    char ale_file[filename_length];
+    sprintf(ale_file, "%s/ale.dat", outputdir);
+    std::ofstream ale_out(ale_file);
++
++   // ---- instrumentation (E6): per-step diagnostics and remap diagnostics ----
++   hydro.SetDiagnosticsDir(outputdir);
++   char step_diag_file[filename_length];
++   sprintf(step_diag_file, "%s/step_diag.dat", outputdir);
++   std::ofstream step_diag_out(step_diag_file);
++   step_diag_out << "# t step dt wall_ode wall_remap wall_cum KE IE EB normB divL2 divFn divMax errB_L2 helicity remapped\n";
++   double wall_ode_acc = 0.0;
++   double wall_cum = 0.0;   // cumulative wall time of ODE steps + remaps (excl. diagnostics)
++   double wall_remap_step = 0.0;
++   auto write_step_diag = [&](int ti_, real_t t_, real_t dt_, bool remapped)
++   {
++      BDiag dB;
++      ComputeBDiag(B_gf, divB_FESpace, dB);
++      real_t hel = (dim == 3) ? GFInnerProduct(B_gf, A_gf) : 0.0;
++      real_t errB = 0.0;
++      if (pd->has_exact_solution)
++      {
++         VectorFunctionCoefficient Bex(dim, pd->exact_B);
++         Bex.SetTime(t_);
++         errB = B_gf.ComputeL2Error(Bex);
++      }
++      real_t KE = hydro.KineticEnergy(v_gf);
++      real_t IE = hydro.InternalEnergy(e_gf);
++      step_diag_out << std::scientific << std::setprecision(16)
++                    << t_ << " " << ti_ << " " << dt_ << " " << wall_ode_acc << " "
++                    << wall_remap_step << " " << wall_cum << " " << KE << " " << IE << " "
++                    << dB.EB << " " << dB.normB << " " << dB.divL2 << " " << dB.divFn << " "
++                    << dB.divMax << " " << errB << " " << hel << " " << (int)remapped << endl;
++   };
++   write_step_diag(0, 0.0, 0.0, false);
+    
+    PrintError(pd, t, rho_gf, v_gf, e_gf, B_gf);
+      
+@@ -640,11 +671,13 @@ int main(int argc, char *argv[])
+       t_old = t;
+       hydro.ResetTimeStepEstimate();
+ 
++      const double w_ode0 = MPI_Wtime();
+       ode_solver->Step(S, t, dt);
+       steps++;
+ 
+       // Adaptive time step control.
+       const double dt_est = hydro.GetTimeStepEstimate(S);
++      wall_ode_acc += MPI_Wtime() - w_ode0;
+       if (dt_est < dt)
+       {
+          if(Mpi::Root()) {
+@@ -708,7 +741,9 @@ int main(int argc, char *argv[])
+                              outputdir, paraview_basename);
+                if(last_step) ti++;
+             }
++            hydro.SetDiagnosticsTimeStep(t, ti);
+             hydro.RemeshAndRemap(S);
++            wall_remap_step = hydro.GetLastRemapWall();
+             if(plot_at_remap && (visualization || paraview))
+             {
+                Visualization(visualization, paraview, pmesh, rho_gf, v_gf, e_gf, B_gf, A_gf, ++ti, t+100,
+@@ -719,6 +754,10 @@ int main(int argc, char *argv[])
+       } 
+       ale_out << std::scientific << std::setprecision(16)
+                 << t << " " << need_remesh << endl;
++      wall_cum += wall_ode_acc + wall_remap_step;
++      write_step_diag(ti, t, dt, need_remesh);
++      wall_ode_acc = 0.0;
++      wall_remap_step = 0.0;
+       
+       // output divergence error of B
+       B_err = GFDivError(B_gf);
+@@ -779,6 +818,7 @@ int main(int argc, char *argv[])
+    helicity_out.close();
+    time_step_out.close();
+    ale_out.close();
++   step_diag_out.close();
+ 
+    // Free the used memory.
+    delete fec_A;
+diff --git a/MHD_solver.cpp b/MHD_solver.cpp
+index 658ea8e..df1c500 100644
+--- a/MHD_solver.cpp
++++ b/MHD_solver.cpp
+@@ -18,6 +18,9 @@
+ #include "general/forall.hpp"
+ #include "MHD_solver.hpp"
+ #include "linalg/kernels.hpp"
++#include "remap.hpp"
++#include <fstream>
++#include <iomanip>
+ #include <unordered_map>
+ #include <fstream>
+ #include "mesh_smoother.hpp"
+@@ -776,12 +779,38 @@ bool LagrangianHydroOperator::NeedRemesh()
+    
+ }
+ 
++void LagrangianHydroOperator::SetDiagnosticsDir(const char *dir)
++{
++   diag_dir = dir;
++   if (Mpi::Root())
++   {
++      std::ofstream f(diag_dir + "/remap_diag.dat");
++      f << "# t step wall_Aremap wall_remap_total wall_shadow maxdisp hmin "
++           "EB_b normB_b divL2_b divFn_b divMax_b hel_b KE_b IE_b "
++           "EB_a normB_a divL2_a divFn_a divMax_a hel_a KE_a IE_a errB_b errB_a "
++           "EB_s normB_s divL2_s divFn_s divMax_s errB_s L2diff_sA\n";
++   }
++}
++
+ void LagrangianHydroOperator::RemeshAndRemap(Vector &S)
+ {   
+    if(Mpi::Root())
+    {
+       printf("-----REMAP-----\n");
+    }
++
++   // ---- instrumentation (E6): timers and "before" diagnostics ----
++   const bool diag_on = !diag_dir.empty();
++   MPI_Barrier(pmesh->GetComm());
++   const double w_start = MPI_Wtime();
++   double w_diag = 0.0, w_shadow = 0.0, w_A = 0.0;
++   BDiag dB_b{}, dB_a{}, dB_s{};
++   real_t hel_b = 0.0, hel_a = 0.0, KE_b = 0.0, KE_a = 0.0, IE_b = 0.0, IE_a = 0.0;
++   real_t errB_b = 0.0, errB_a = 0.0, errB_s = 0.0, L2diff_sA = 0.0;
++   real_t maxdisp = 0.0, hmin = 0.0;
++   ParGridFunction B_shadow(&fes_B);
++   VectorFunctionCoefficient B_exact_coeff(dim, pd->exact_B);
++   B_exact_coeff.SetTime(diag_t);
+       
+    ParGridFunction newnodes(nodes->ParFESpace());
+    mesh_smoother->Smooth(newnodes);
+@@ -790,6 +819,32 @@ void LagrangianHydroOperator::RemeshAndRemap(Vector &S)
+    ParGridFunction mesh_velocity(&fes_x);
+    mesh_velocity.Set(1.0, x_gf);
+    mesh_velocity.Add(-1.0, newnodes);
++
++   if (diag_on)
++   {
++      const double wd0 = MPI_Wtime();
++      ParGridFunction v_tmp, e_tmp;
++      v_tmp.MakeRef(&fes_v, S, xVsize);
++      e_tmp.MakeRef(&fes_e, S, xVsize + vVsize);
++      maxdisp = GFMaxNorm(mesh_velocity);
++      hmin = GetMeshSize(pmesh);
++      ComputeBDiag(B_gf, fes_divB, dB_b);
++      if (dim == 3) { hel_b = GFInnerProduct(B_gf, A_gf); }
++      KE_b = KineticEnergy(v_tmp);
++      IE_b = InternalEnergy(e_tmp);
++      if (pd->has_exact_solution) { errB_b = B_gf.ComputeL2Error(B_exact_coeff); }
++      w_diag += MPI_Wtime() - wd0;
++
++      // shadow direct-B transfer: interpolate RT B_gf onto the new mesh with the
++      // existing GSLIB InterpolateRemap; NOT used in the evolution.
++      MPI_Barrier(pmesh->GetComm());
++      const double ws0 = MPI_Wtime();
++      B_shadow = B_gf;
++      InterpolateRemap shadow_remap;
++      shadow_remap.Remap(mesh_velocity, B_shadow);
++      MPI_Barrier(pmesh->GetComm());
++      w_shadow = MPI_Wtime() - ws0;
++   }
+    
+    ParGridFunction v_gf;
+    v_gf.MakeRef(&fes_v, S, xVsize);
+@@ -923,6 +978,8 @@ void LagrangianHydroOperator::RemeshAndRemap(Vector &S)
+       printf("Remapping magnetic vector potential ... \n");
+    }
+    
++   MPI_Barrier(pmesh->GetComm());
++   const double wA0 = MPI_Wtime();
+    switch (remap_type_A)
+    {
+    case RemapType::Exact:
+@@ -968,6 +1025,9 @@ void LagrangianHydroOperator::RemeshAndRemap(Vector &S)
+       break;
+    }
+ 
++   MPI_Barrier(pmesh->GetComm());
++   w_A = MPI_Wtime() - wA0;
++
+    // todo: gamma remap? check the use of gamma in the whole code.
+    
+    // Update the mesh nodes
+@@ -986,6 +1046,41 @@ void LagrangianHydroOperator::RemeshAndRemap(Vector &S)
+    
+    // restart Lagrangian 
+    AssembleMvMe();
++
++   // ---- instrumentation (E6): "after" and shadow diagnostics ----
++   MPI_Barrier(pmesh->GetComm());
++   last_remap_wall = (MPI_Wtime() - w_start) - w_diag - w_shadow;
++   if (diag_on)
++   {
++      ParGridFunction v_tmp, e_tmp;
++      v_tmp.MakeRef(&fes_v, S, xVsize);
++      e_tmp.MakeRef(&fes_e, S, xVsize + vVsize);
++      ComputeBDiag(B_gf, fes_divB, dB_a);
++      if (dim == 3) { hel_a = GFInnerProduct(B_gf, A_gf); }
++      KE_a = KineticEnergy(v_tmp);
++      IE_a = InternalEnergy(e_tmp);
++      ComputeBDiag(B_shadow, fes_divB, dB_s);
++      L2diff_sA = GFL2Diff(B_shadow, B_gf);
++      if (pd->has_exact_solution)
++      {
++         errB_a = B_gf.ComputeL2Error(B_exact_coeff);
++         errB_s = B_shadow.ComputeL2Error(B_exact_coeff);
++      }
++      if (Mpi::Root())
++      {
++         std::ofstream f(diag_dir + "/remap_diag.dat", std::ios::app);
++         f << std::scientific << std::setprecision(16)
++           << diag_t << " " << diag_step << " " << w_A << " " << last_remap_wall
++           << " " << w_shadow << " " << maxdisp << " " << hmin
++           << " " << dB_b.EB << " " << dB_b.normB << " " << dB_b.divL2 << " " << dB_b.divFn << " " << dB_b.divMax
++           << " " << hel_b << " " << KE_b << " " << IE_b
++           << " " << dB_a.EB << " " << dB_a.normB << " " << dB_a.divL2 << " " << dB_a.divFn << " " << dB_a.divMax
++           << " " << hel_a << " " << KE_a << " " << IE_a
++           << " " << errB_b << " " << errB_a
++           << " " << dB_s.EB << " " << dB_s.normB << " " << dB_s.divL2 << " " << dB_s.divFn << " " << dB_s.divMax
++           << " " << errB_s << " " << L2diff_sA << std::endl;
++      }
++   }
+          
+    if(Mpi::Root())
+    {
+diff --git a/MHD_solver.hpp b/MHD_solver.hpp
+index 0124484..4947e3d 100644
+--- a/MHD_solver.hpp
++++ b/MHD_solver.hpp
+@@ -123,6 +123,12 @@ protected:
+    RemapType remap_type_rho;
+    BoundPreservingType bp_type;
+ 
++   // instrumentation (remap diagnostics); does not affect the evolution
++   std::string diag_dir;
++   real_t diag_t = 0.0;
++   int diag_step = 0;
++   mutable real_t last_remap_wall = 0.0;
++
+    virtual void ComputeMaterialProperties(int nvalues, const double gamma[],
+                                           const double rho[], const double e[], const Vector B[],
+                                           double p[], double cs[]) const
+@@ -198,6 +204,12 @@ public:
+    void SetRemapType_rho(RemapType rt, BoundPreservingType bp){ remap_type_rho = rt; bp_type = bp; }
+    
+    const IntegrationRule & GetIntegrationRule() {return ir;}
++
++   // instrumentation: output directory for remap_diag.dat (truncates the file),
++   // current time/step for the next remap, wall time of last remap (excl. diagnostics)
++   void SetDiagnosticsDir(const char *dir);
++   void SetDiagnosticsTimeStep(real_t t_, int step_) { diag_t = t_; diag_step = step_; }
++   real_t GetLastRemapWall() const { return last_remap_wall; }
+ };
+ 
+ } // namespace hydrodynamics
+diff --git a/tools.cpp b/tools.cpp
+index 9986e23..a573627 100644
+--- a/tools.cpp
++++ b/tools.cpp
+@@ -241,6 +241,36 @@ namespace mfem
+         return div_err;
+     }
+ 
++    void ComputeBDiag(ParGridFunction &B, ParFiniteElementSpace &fes_div, BDiag &d)
++    {
++        ParFiniteElementSpace *fes_B = B.ParFESpace();
++        MPI_Comm comm = fes_B->GetParMesh()->GetComm();
++        real_t BB = GFInnerProduct(B, B);
++        d.EB = 0.5 * BB;
++        d.normB = std::sqrt(std::max(BB, (real_t)0.0));
++        d.divL2 = GFDivError(B);
++
++        ParDiscreteLinearOperator div(fes_B, &fes_div);
++        div.AddDomainInterpolator(new DivergenceInterpolator);
++        div.Assemble();
++        div.Finalize();
++        ParGridFunction divgf(&fes_div);
++        div.Mult(B, divgf);
++        ConstantCoefficient zero(0.0);
++        d.divFn = divgf.ComputeL2Error(zero);
++        real_t mx = divgf.Normlinf();
++        MPI_Allreduce(MPI_IN_PLACE, &mx, 1, MPITypeMap<real_t>::mpi_type, MPI_MAX, comm);
++        d.divMax = mx;
++    }
++
++    real_t GFL2Diff(const ParGridFunction &a, const ParGridFunction &b)
++    {
++        ParGridFunction diff(a);
++        diff -= b;
++        real_t nn = GFInnerProduct(diff, diff);
++        return std::sqrt(std::max(nn, (real_t)0.0));
++    }
++
+     real_t GetMeshSize(ParMesh *pmesh)
+     {
+         pmesh->EnsureNodes();
+diff --git a/tools.hpp b/tools.hpp
+index 39768b6..b3f5b59 100644
+--- a/tools.hpp
++++ b/tools.hpp
+@@ -49,6 +49,21 @@ void ProjectDensity(ParGridFunction &rho_gf, Coefficient &rho_coeff, const Integ
+ 
+ void DivFreeProject(ParGridFunction &gf, ParFiniteElementSpace *W_space, VectorCoefficient &fcoeff);
+ 
++// ---- instrumentation (E6 diagnostics) ----
++// Diagnostics of an RT magnetic-flux grid function B.
++struct BDiag
++{
++    real_t EB;      // 0.5 * int B.B   (raw, i.e. without 1/mu)
++    real_t normB;   // L2 norm of B
++    real_t divL2;   // L2 norm of div B (GFDivError, evaluated at quadrature points)
++    real_t divFn;   // L2 norm of the L2-function DivergenceInterpolator(B)
++    real_t divMax;  // max |dof| of DivergenceInterpolator(B)
++};
++void ComputeBDiag(ParGridFunction &B, ParFiniteElementSpace &fes_div, BDiag &d);
++
++// L2 norm of (a - b) for two grid functions in the same space
++real_t GFL2Diff(const ParGridFunction &a, const ParGridFunction &b);
++
+ 
+ }
+ 
