@@ -150,7 +150,51 @@ remaps, stability:
 
 ## 6. Smooth ALE cycle with rezones (Experiment 5)
 
-Pending: see `results/exp5_summary.md` when available.
+Material motion x = X + eps s(t) f1(X), s = sin^2(pi t/T), 100 steps, frozen-in
+field (ideal MHD): the dofs of A and B are exactly constant while the nodes
+move, and the exact field is the Cauchy push-forward. Rezones to a fresh
+uniform mesh at R equally spaced times including t = T.
+
+- Discrete geometric conservation: with no rezone, a and b are constant,
+  helicity changes by 3e-16, slice flux by 7e-16, scaled divergence stays
+  <= 3e-15, and the errors at t = T equal those at t = 0 exactly. Mesh motion
+  alone costs nothing in the dofs; the peak representation error at full
+  deformation is +3 % (eps = 0.3) and +22 % (eps = 0.6) at p = 2. At p = 3 a
+  Q2 geometry is the limiting error (3.6 to 8.7x); Q3 geometry restores
+  +3 % / +14 %.
+- Final B error at T (relative to the exact field; t = 0 value 2.28e-2 at
+  p = 2 and 1.52e-3 at p = 3), R = 5 / R = 20 rezones:
+
+| operator | p=2, eps=0.3 | p=2, eps=0.6 | p=3, eps=0.3 | p=3, eps=0.6 |
+|---|---|---|---|---|
+| A_int + Coulomb | 2.70e-2 / 2.71e-2 | 3.46e-2 / 3.75e-2 | 3.36e-3 / 2.79e-3 | 1.74e-2 / 7.39e-3 |
+| A_l2 + Coulomb | 2.56e-2 / 2.38e-2 | 3.76e-2 / 3.44e-2 | 5.84e-3 / 3.09e-3 | 2.68e-2 / 1.08e-2 |
+| B_l2 | 2.66e-2 / 2.64e-2 | 3.10e-2 / 3.40e-2 | 2.87e-3 / 2.66e-3 | 1.36e-2 / 6.50e-3 |
+| B_l2c | 2.66e-2 / 2.63e-2 | 3.07e-2 / 3.31e-2 | 2.82e-3 / 2.64e-3 | 1.34e-2 / 5.97e-3 |
+
+- The error right after a rezone is set by the projection floor of the new
+  mesh for the deformed field; B_l2 and B_l2c land at 1.00 to 1.04x that
+  floor, A_int + Coulomb at 1.02 to 1.08x, A_l2 + Coulomb at 1.3 to 1.5x.
+  Information lost there is not recovered when the mesh moves back.
+- The error does not grow linearly with the number of rezones: the mean jump
+  per rezone falls like 1/R, and the final error is flat or decreasing in R.
+  In this realistic regime the gauge-fixed A route is within 1.5 to 3 % of
+  B_l2c at p = 2, eps = 0.3, and 6 to 46 % worse at p = 3 or eps = 0.6; a
+  Coulomb projection on the source mesh before the transfer closes the gap to
+  7 to 12 %.
+- B_l2 and B_l2c have the same B error, so cleaning costs only time (2 to 3x)
+  and buys divergence and (partly) flux. The A route gives div 1e-15 and exact
+  slice flux for free; the B route's flux drift at T with a mean field is
+  1e-6 (B_l2c), 1.6e-4 (B_l2), 8.8e-4 (B_int).
+- Energy ratio stays within 1 % for every operator; helicity changes by at
+  most 0.6 % in the A route.
+- Structural finding: a frozen-in constant mean field deforms into a field
+  whose fluctuating part is 22 % (eps 0.3) to 48 % (eps 0.6) of |B0| at full
+  deformation. A plain transfer of a loses it, because a represents only the
+  zero-mean part on the original mesh. A correct A-route rezone with B0 != 0
+  needs a curl inversion of the deformed harmonic part (global solve) or a
+  direct B transfer of that part. For cosmological boxes with zero mean field
+  this does not arise; with an imposed mean field it does.
 
 ## 7. MHD-ALE integration (Experiment 6)
 
