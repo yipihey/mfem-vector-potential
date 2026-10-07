@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
    int N = 8, p = 2, q = -1, fv1 = 1, nq = -1;
    real_t eps1 = 0.3, gauge_g = 0.0, gauge_k = 2.0;
-   std::string field = "abc", m2s = "uniform", opss = "all", csv, tag;
+   std::string field = "abc", m2s = "uniform", opss = "all", csv, tag, gfixstr = "none";
    bool b0on = false, gradfrac = true;
    OptionsParser args(argc, argv);
    args.AddOption(&N, "-N", "--N", "Cells per direction of M1.");
@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
    args.AddOption(&m2s, "-m2", "--m2", "uniform | deformed:eps2:fv2 | fine:N2");
    args.AddOption(&gauge_g, "-gauge", "--gauge", "Gauge amplitude g: A1 += grad chi on M1 before the transfer.");
    args.AddOption(&gauge_k, "-gk", "--gauge-k", "Gauge wavenumber in units of pi (2 smooth, 6 rough).");
+   args.AddOption(&gfixstr, "-gfix", "--gfix", "Gauge fix applied AFTER the A-route transfer: none | coulomb | jacobi:k "
+                  "(named -gfix because -gauge is the gauge-perturbation amplitude here).");
    args.AddOption(&opss, "-ops", "--ops", "comma list of A_pt,A_int,A_l2,B_pt,B_int,B_l2,B_l2c or all");
    args.AddOption(&nq, "-nq", "--nq", "Gauss points per direction for the *_int transfers (default p+2).");
    args.AddOption(&gradfrac, "-gradfrac", "--gradfrac", "-no-gradfrac", "--no-gradfrac", "Compute the gradient fraction of A.");
@@ -54,6 +56,9 @@ int main(int argc, char *argv[])
 
    MeshCase M1(comm, s1, p, q), M2(comm, s2, p, q);
    Tick("meshes+ops");
+   const GaugeSpec gspec = GaugeSpec::Parse(gfixstr);
+   std::unique_ptr<CoulombGauge> cg2;
+   if (gspec.On()) { cg2.reset(new CoulombGauge(*M2.sp, *M2.ops)); Tick("gauge setup"); }
    MeshState S1(M1, pr), S2(M2, pr);
    Tick("mesh state (b0, diag)");
    if (rank == 0)
@@ -137,6 +142,22 @@ int main(int argc, char *argv[])
          b2 = x2;
          d2 = S2.diag->Evaluate(nullptr, b2, false);
       }
+      // optional gauge fix after the transfer (A-route only): B must not change
+      GaugeFixStats gst;
+      StateDiag d2pre = d2;
+      real_t g_dB = std::nan(""), g_dH = std::nan("");
+      const bool gon = isA && gspec.On();
+      if (gon)
+      {
+         const Vector b2pre = b2;
+         gst = gspec.Apply(*cg2, a2, true);
+         S2.Compose(a2, b2);
+         d2 = S2.diag->Evaluate(&a2, b2, gradfrac);
+         Vector zero(b2.Size());
+         zero = 0.0;
+         g_dB = S2.diag->RTDistance(b2pre, b2) / S2.diag->RTDistance(b2pre, zero);
+         g_dH = (d2.helicity - d2pre.helicity) / d2pre.hel_scale;
+      }
       const double t_total = WallTime() - Tk;
       Tick(KindName(kind));
 
@@ -167,6 +188,18 @@ int main(int argc, char *argv[])
       r.Set("helicity_exact", (double)pr.ExactH());
       r.Set("pollution_B", (double)pollution);
       r.Set("pollution_A", (double)pollution_a);
+      r.Set("gfix", isA ? gspec.str : std::string("none"));
+      r.Set("gfix_iters", gon ? gst.iters : 0);
+      r.Set("gfix_time", gon ? gst.time : 0.0);
+      r.Set("gfix_setup", gon ? cg2->SetupTime() : 0.0);
+      r.Set("gfix_resid_before", gon ? (double)gst.resid_before : std::nan(""));
+      r.Set("gfix_resid_after", gon ? (double)gst.resid_after : std::nan(""));
+      r.Set("gfix_gf_before", gon ? (double)gst.grad_fraction_before : std::nan(""));
+      r.Set("gfix_gf_after", gon ? (double)gst.grad_fraction_after : std::nan(""));
+      r.Set("gfix_dB_rel", (double)g_dB);
+      r.Set("gfix_dH_scaled", (double)g_dH);
+      r.Set("pre_grad_frac", isA ? (double)d2pre.grad_frac : std::nan(""));
+      r.Set("pre_helicity", isA ? (double)d2pre.helicity : std::nan(""));
       r.Set("t_setup", st.t_setup); r.Set("t_locate", st.t_locate); r.Set("t_collect", st.t_collect);
       r.Set("t_eval", st.t_eval); r.Set("t_dofs", st.t_dofs); r.Set("t_solve", st.t_solve);
       r.Set("t_apply", st.t_apply); r.Set("t_oneshot", st.t_setup + st.t_apply);
@@ -184,6 +217,11 @@ int main(int argc, char *argv[])
                    << ") div_rel=" << d2.div_rel_l2 << " dE/E1=" << (d2.energy - E1) / E1
                    << " t_oneshot=" << st.t_setup + st.t_apply << " iters=" << st.iters
                    << " notfound=" << st.nnotfound;
+         if (gon)
+         {
+            std::cout << " | gfix " << gspec.str << ": iters " << gst.iters << " time " << gst.time << " gradfrac "
+                      << d2pre.grad_frac << "->" << d2.grad_frac << " dB " << g_dB << " dH " << g_dH;
+         }
          if (with_gauge && isA) { std::cout << " pollutionB=" << pollution << " A=" << pollution_a; }
          std::cout << std::defaultfloat << std::endl;
       }

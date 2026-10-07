@@ -1,0 +1,19 @@
+Options used:
+   --N 8
+   --order 3
+   --geom-order 2
+   --eps 0.3
+   --steps 100
+   --rezones 2
+   --op B_l2c
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_floors_parts/fl_p3_q2_e0.3_r2.csv
+   --tag 
+   --floors
+   --no-selftest
+rezone 1 t=0.5 floor on deformed source 0.00164927, on uniform target 0.00234317
+rezone 2 t=1 floor on deformed source 0.00189599, on uniform target 0.00151531

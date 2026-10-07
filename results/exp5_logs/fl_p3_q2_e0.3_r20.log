@@ -1,0 +1,37 @@
+Options used:
+   --N 8
+   --order 3
+   --geom-order 2
+   --eps 0.3
+   --steps 100
+   --rezones 20
+   --op B_l2c
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_floors_parts/fl_p3_q2_e0.3_r20.csv
+   --tag 
+   --floors
+   --no-selftest
+rezone 1 t=0.05 floor on deformed source 0.00151536, on uniform target 0.00151565
+rezone 2 t=0.1 floor on deformed source 0.00151667, on uniform target 0.00152042
+rezone 3 t=0.15 floor on deformed source 0.00152516, on uniform target 0.00153941
+rezone 4 t=0.2 floor on deformed source 0.00155184, on uniform target 0.00158513
+rezone 5 t=0.25 floor on deformed source 0.00160959, on uniform target 0.00166926
+rezone 6 t=0.3 floor on deformed source 0.00170885, on uniform target 0.00179821
+rezone 7 t=0.35 floor on deformed source 0.00185193, on uniform target 0.00196583
+rezone 8 t=0.4 floor on deformed source 0.00202534, on uniform target 0.00214518
+rezone 9 t=0.45 floor on deformed source 0.00219408, on uniform target 0.00228803
+rezone 10 t=0.5 floor on deformed source 0.00230748, on uniform target 0.00234317
+rezone 11 t=0.55 floor on deformed source 0.00232316, on uniform target 0.00228803
+rezone 12 t=0.6 floor on deformed source 0.002235, on uniform target 0.00214518
+rezone 13 t=0.65 floor on deformed source 0.00207764, on uniform target 0.00196583
+rezone 14 t=0.7 floor on deformed source 0.00190248, on uniform target 0.00179821
+rezone 15 t=0.75 floor on deformed source 0.00174983, on uniform target 0.00166926
+rezone 16 t=0.8 floor on deformed source 0.00163812, on uniform target 0.00158513
+rezone 17 t=0.85 floor on deformed source 0.00156837, on uniform target 0.00153941
+rezone 18 t=0.9 floor on deformed source 0.00153238, on uniform target 0.00152042
+rezone 19 t=0.95 floor on deformed source 0.00151854, on uniform target 0.00151565
+rezone 20 t=1 floor on deformed source 0.0015155, on uniform target 0.00151531

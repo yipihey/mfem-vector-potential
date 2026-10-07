@@ -1,0 +1,14 @@
+p=3 N=8 eps=0.3 ND=41472 H1=13824 gauge setup 11.3201 s
+max|L - K|/max|K| (L = G^T M_ND G, K = DiffusionIntegrator) = 2.92516e-15
+max|C G| = 0
+   |dB|/|B| = 9.951e-16 H 1.257e+01 -> 1.257e+01 (dH/hel_scale = 5.654e-15)  |a| 1.414e+00 -> 1.414e+00
+   |dB|/|B| = 4.027e-15 H 1.257e+01 -> 1.257e+01 (dH/hel_scale = 1.030e-14)  |a| 2.388e+00 -> 1.414e+00
+   |dB|/|B| = 5.465e-15 H 1.257e+01 -> 1.257e+01 (dH/hel_scale = 4.892e-15)  |a| 5.925e+00 -> 1.414e+00
+LSQ check: p=3 N=8 source f1 eps=3.000e-01 -> uniform, abc, no B0
+  div_h(b_l2c) max = 5.258e-13   div_h(b_l2) max = 9.510e-01
+  M-orthogonality of (b_l2c - b_l2) to C a_rand (5 random a): max normalised = 2.224e-15,  to b_l2c itself: 1.187e-15
+  LSQ solve (CG+AMS, shift 1.000e-09): iters 67 converged 1 time 1.913e+01 s; coulomb residual of a_ls 4.146e-04, grad fraction of a_ls 6.354e-04
+  ||C a_ls - b_l2c||_M / ||b_l2c||_M = 2.533e-11
+  ||b_l2 - b_l2c||_M / ||b_l2c||_M   = 1.927e-04  (the divergence-cleaning change)
+  ||C a_A_l2 - b_l2c||_M / ||b_l2c||_M = 2.466e-03  (A_l2 then B = C a: different operator)
+  B error of b_l2c vs exact: 1.817e-03

@@ -1,0 +1,33 @@
+Options used:
+   --N 8
+   --order 3
+   --geom-order 2
+   --eps 0.3
+   --steps 100
+   --rezones 5
+   --op A_int
+   --gauge coulomb
+   --field abc
+   --no-b0
+   --fv 1
+   --every 2
+   --csv results/exp5_parts/main_p3_e0.3_r5_A_int_coulomb.csv.tmp
+   --tag main
+   --no-selftest
+t=0: errB=0.00151531 errA=0.000125506 E_B=39.4784 E_ex=39.4784 H=12.5663 minDetJ=1
+k=10 t=0.1 errB=0.00158661 E/Eex=0.999999 H/H0=1 div=3.11569e-15 minDetJ=0.999097
+k=20 t=0.2 errB=0.00229408 E/Eex=0.999993 H/H0=1 div=3.10773e-15 minDetJ=0.988186
+  rezone at k=20 (t=0.2): 27.8022 s (setup 5.47744, apply 2.96897, gauge 1.28917), errB 0.00248398, div 3.14695e-15, label Newton resid 9.32587e-15 (mean its 2.76389)
+k=30 t=0.3 errB=0.00369138 E/Eex=1.00001 H/H0=1.00003 div=3.12382e-15 minDetJ=0.970021
+k=40 t=0.4 errB=0.00490424 E/Eex=0.999981 H/H0=1.00003 div=3.09453e-15 minDetJ=0.931752
+  rezone at k=40 (t=0.4): 28.1198 s (setup 4.83102, apply 3.30552, gauge 1.14779), errB 0.00507744, div 3.10097e-15, label Newton resid 9.49241e-15 (mean its 3.15509)
+k=50 t=0.5 errB=0.00544737 E/Eex=0.999985 H/H0=1.00006 div=3.08687e-15 minDetJ=0.981201
+k=60 t=0.6 errB=0.00507744 E/Eex=1 H/H0=1.00006 div=3.10097e-15 minDetJ=1
+  rezone at k=60 (t=0.6): 6.87843 s (setup 1.97274, apply 2.81616, gauge 1.12328), errB 0.00507744, div 3.07932e-15, label Newton resid 9.49241e-15 (mean its 3.15509)
+k=70 t=0.7 errB=0.00443365 E/Eex=1.00004 H/H0=1.00006 div=3.1091e-15 minDetJ=0.966118
+k=80 t=0.8 errB=0.00440197 E/Eex=1.00007 H/H0=1.00006 div=3.1326e-15 minDetJ=0.939941
+  rezone at k=80 (t=0.8): 10.0047 s (setup 4.74477, apply 3.19748, gauge 1.03507), errB 0.00399945, div 3.14699e-15, label Newton resid 9.32587e-15 (mean its 2.76389)
+k=90 t=0.9 errB=0.0037968 E/Eex=1.00008 H/H0=1.00007 div=3.15506e-15 minDetJ=0.989989
+k=100 t=1 errB=0.00383191 E/Eex=1.00008 H/H0=1.00007 div=3.15572e-15 minDetJ=0.989389
+  rezone at k=100 (t=1): 10.4166 s (setup 5.15415, apply 3.28032, gauge 1.03713), errB 0.00335705, div 3.17093e-15, label Newton resid 0 (mean its 0)
+FINAL op=A_int gauge=coulomb p=3 eps=3.0000e-01 rezones=5 b0=0: ||b_T-b_0||/||b_0||=3.0001e-03 errB(T)=3.3570e-03 E(T)/E(0)=1.0001e+00 H(T)/H(0)=1.0001e+00 flux_err=4.4409e-16 div=3.1709e-15 transfer_time=8.3222e+01 s, notfound=0, wall 1.4899e+02 s

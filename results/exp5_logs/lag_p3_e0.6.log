@@ -1,0 +1,28 @@
+Options used:
+   --N 8
+   --order 3
+   --geom-order 2
+   --eps 0.6
+   --steps 100
+   --rezones 0
+   --op A_int
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_parts/lag_p3_e0.6.csv.tmp
+   --tag lag
+   --no-selftest
+t=0: errB=0.00151531 errA=0.000125506 E_B=39.4784 E_ex=39.4784 H=12.5663 minDetJ=1
+k=10 t=0.1 errB=0.0017856 E/Eex=0.999997 H/H0=1 div=3.11373e-15 minDetJ=0.99639
+k=20 t=0.2 errB=0.00383713 E/Eex=0.999974 H/H0=1 div=3.08152e-15 minDetJ=0.952744
+k=30 t=0.3 errB=0.00732451 E/Eex=0.9999 H/H0=1 div=2.99164e-15 minDetJ=0.830404
+k=40 t=0.4 errB=0.0112095 E/Eex=0.999792 H/H0=1 div=2.88316e-15 minDetJ=0.676101
+k=50 t=0.5 errB=0.0132429 E/Eex=0.99974 H/H0=1 div=2.83476e-15 minDetJ=0.604102
+k=60 t=0.6 errB=0.0112095 E/Eex=0.999792 H/H0=1 div=2.88316e-15 minDetJ=0.676101
+k=70 t=0.7 errB=0.00732451 E/Eex=0.9999 H/H0=1 div=2.99164e-15 minDetJ=0.830404
+k=80 t=0.8 errB=0.00383713 E/Eex=0.999974 H/H0=1 div=3.08152e-15 minDetJ=0.952744
+k=90 t=0.9 errB=0.0017856 E/Eex=0.999997 H/H0=1 div=3.11373e-15 minDetJ=0.99639
+k=100 t=1 errB=0.00151531 E/Eex=0.999999 H/H0=1 div=3.11634e-15 minDetJ=1
+FINAL op=A_int gauge=none p=3 eps=6.0000e-01 rezones=0 b0=0: ||b_T-b_0||/||b_0||=0.0000e+00 errB(T)=1.5153e-03 E(T)/E(0)=1.0000e+00 H(T)/H(0)=1.0000e+00 flux_err=4.3021e-16 div=3.1163e-15 transfer_time=0.0000e+00 s, notfound=0, wall 1.2690e+02 s

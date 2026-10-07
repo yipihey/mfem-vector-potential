@@ -1,0 +1,30 @@
+Options used:
+   --N 8
+   --order 2
+   --geom-order 2
+   --eps 0.6
+   --steps 100
+   --rezones 2
+   --op B_l2c
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_parts/main_p2_e0.6_r2_B_l2c_none.csv.tmp
+   --tag main
+   --no-selftest
+t=0: errB=0.0227942 errA=nan E_B=39.4681 E_ex=39.4784 H=nan minDetJ=1
+k=10 t=0.1 errB=0.0228143 E/Eex=0.999738 H/H0=nan div=1.17769e-15 minDetJ=0.99639
+k=20 t=0.2 errB=0.0231025 E/Eex=0.999716 H/H0=nan div=1.16566e-15 minDetJ=0.952744
+k=30 t=0.3 errB=0.024229 E/Eex=0.999656 H/H0=nan div=1.13186e-15 minDetJ=0.830404
+k=40 t=0.4 errB=0.0263899 E/Eex=0.999584 H/H0=nan div=1.09059e-15 minDetJ=0.676101
+k=50 t=0.5 errB=0.0277873 E/Eex=0.999556 H/H0=nan div=1.07197e-15 minDetJ=0.604102
+  rezone at k=50 (t=0.5): 4.36788 s (setup 1.42503, apply 2.89321, gauge 0), errB 0.0562994, div 1.42294e-14, label Newton resid 5.66214e-15 (mean its 3.93808)
+k=60 t=0.6 errB=0.0539823 E/Eex=0.996422 H/H0=nan div=1.45906e-14 minDetJ=0.950208
+k=70 t=0.7 errB=0.0513245 E/Eex=0.997846 H/H0=nan div=1.53824e-14 minDetJ=0.843917
+k=80 t=0.8 errB=0.0520638 E/Eex=0.999007 H/H0=nan div=1.60285e-14 minDetJ=0.760663
+k=90 t=0.9 errB=0.0547073 E/Eex=0.999821 H/H0=nan div=1.62589e-14 minDetJ=0.732248
+k=100 t=1 errB=0.0561038 E/Eex=1.00013 H/H0=nan div=1.62769e-14 minDetJ=0.730587
+  rezone at k=100 (t=1): 4.76295 s (setup 1.58309, apply 3.14411, gauge 0), errB 0.0347858, div 1.36738e-14, label Newton resid 0 (mean its 0)
+FINAL op=B_l2c gauge=none p=2 eps=6.0000e-01 rezones=2 b0=0: ||b_T-b_0||/||b_0||=2.6234e-02 errB(T)=3.4786e-02 E(T)/E(0)=9.9721e-01 H(T)/H(0)=nan flux_err=7.5148e-15 div=1.3674e-14 transfer_time=9.1308e+00 s, notfound=0, wall 4.1286e+01 s

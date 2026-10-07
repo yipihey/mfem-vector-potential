@@ -1,0 +1,33 @@
+Options used:
+   --N 8
+   --order 2
+   --geom-order 2
+   --eps 0.3
+   --steps 100
+   --rezones 5
+   --op A_l2
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_parts/extra_p2_e0.3_r5_A_l2_none.csv.tmp
+   --tag extra
+   --no-selftest
+t=0: errB=0.0227942 errA=0.00276252 E_B=39.4681 E_ex=39.4784 H=12.5566 minDetJ=1
+k=10 t=0.1 errB=0.0227991 E/Eex=0.999739 H/H0=1 div=1.17842e-15 minDetJ=0.999097
+k=20 t=0.2 errB=0.0228628 E/Eex=0.999734 H/H0=1 div=1.17545e-15 minDetJ=0.988186
+  rezone at k=20 (t=0.2): 2.62123 s (setup 1.38724, apply 1.17922, gauge 0), errB 0.0250169, div 1.23931e-15, label Newton resid 9.32587e-15 (mean its 2.76389)
+k=30 t=0.3 errB=0.0252001 E/Eex=0.999834 H/H0=0.999988 div=1.2298e-15 minDetJ=0.970021
+k=40 t=0.4 errB=0.0254601 E/Eex=0.999822 H/H0=0.999988 div=1.21777e-15 minDetJ=0.931752
+  rezone at k=40 (t=0.4): 2.08013 s (setup 1.07321, apply 0.957736, gauge 0), errB 0.0335657, div 1.20603e-15, label Newton resid 9.49241e-15 (mean its 3.15509)
+k=50 t=0.5 errB=0.0336374 E/Eex=1.00038 H/H0=0.999993 div=1.20059e-15 minDetJ=0.981201
+k=60 t=0.6 errB=0.0335657 E/Eex=1.00038 H/H0=0.999993 div=1.20603e-15 minDetJ=1
+  rezone at k=60 (t=0.6): 1.61532 s (setup 0.479915, apply 1.07097, gauge 0), errB 0.0335657, div 1.18186e-15, label Newton resid 9.49241e-15 (mean its 3.15509)
+k=70 t=0.7 errB=0.0334487 E/Eex=1.00037 H/H0=0.999993 div=1.19333e-15 minDetJ=0.966118
+k=80 t=0.8 errB=0.0334149 E/Eex=1.00036 H/H0=0.999993 div=1.20239e-15 minDetJ=0.939941
+  rezone at k=80 (t=0.8): 2.20264 s (setup 1.1172, apply 1.02438, gauge 0), errB 0.0264726, div 1.19896e-15, label Newton resid 9.32587e-15 (mean its 2.76389)
+k=90 t=0.9 errB=0.0264595 E/Eex=0.99994 H/H0=1 div=1.20208e-15 minDetJ=0.989989
+k=100 t=1 errB=0.0264665 E/Eex=0.999929 H/H0=1 div=1.20233e-15 minDetJ=0.989389
+  rezone at k=100 (t=1): 2.50545 s (setup 1.27552, apply 1.19748, gauge 0), errB 0.0267783, div 1.22427e-15, label Newton resid 0 (mean its 0)
+FINAL op=A_l2 gauge=none p=2 eps=3.0000e-01 rezones=5 b0=0: ||b_T-b_0||/||b_0||=1.4033e-02 errB(T)=2.6778e-02 E(T)/E(0)=1.0002e+00 H(T)/H(0)=1.0000e+00 flux_err=5.8287e-16 div=1.2243e-15 transfer_time=1.1025e+01 s, notfound=0, wall 5.5497e+01 s

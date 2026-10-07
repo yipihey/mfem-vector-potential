@@ -1,0 +1,58 @@
+Options used:
+   --N 8
+   --order 2
+   --geom-order 2
+   --eps 0.6
+   --steps 100
+   --rezones 20
+   --op B_l2
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 1
+   --csv results/exp5_parts/main_p2_e0.6_r20_B_l2_none.csv.tmp
+   --tag main
+   --no-selftest
+t=0: errB=0.0227942 errA=nan E_B=39.4681 E_ex=39.4784 H=nan minDetJ=1
+k=5 t=0.05 errB=0.0227955 E/Eex=0.999739 H/H0=nan div=1.1786e-15 minDetJ=0.999763
+  rezone at k=5 (t=0.05): 1.62029 s (setup 0.751201, apply 0.846344, gauge 0), errB 0.0228598, div 0.000276278, label Newton resid 9.54792e-15 (mean its 1.88079)
+k=10 t=0.1 errB=0.0228812 E/Eex=0.999789 H/H0=nan div=0.000276062 minDetJ=0.99669
+  rezone at k=10 (t=0.1): 2.33549 s (setup 1.36377, apply 0.909687, gauge 0), errB 0.0235392, div 0.00393698, label Newton resid 3.9968e-15 (mean its 2.58796)
+k=15 t=0.15 errB=0.0236261 E/Eex=0.999813 H/H0=nan div=0.00392443 minDetJ=0.987131
+  rezone at k=15 (t=0.15): 2.29156 s (setup 1.37742, apply 0.862809, gauge 0), errB 0.0250403, div 0.00632239, label Newton resid 2.88658e-15 (mean its 2.77778)
+k=20 t=0.2 errB=0.0252375 E/Eex=0.999268 H/H0=nan div=0.00627349 minDetJ=0.970087
+  rezone at k=20 (t=0.2): 2.22105 s (setup 1.27655, apply 0.883195, gauge 0), errB 0.0272836, div 0.0105351, label Newton resid 9.10383e-15 (mean its 2.99653)
+k=25 t=0.25 errB=0.0276309 E/Eex=0.998508 H/H0=nan div=0.0103965 minDetJ=0.947637
+  rezone at k=25 (t=0.25): 2.33021 s (setup 1.3408, apply 0.92191, gauge 0), errB 0.0303329, div 0.015883, label Newton resid 9.99201e-15 (mean its 3.28646)
+k=30 t=0.3 errB=0.0308947 E/Eex=0.997788 H/H0=nan div=0.0155976 minDetJ=0.924318
+  rezone at k=30 (t=0.3): 2.19259 s (setup 1.19343, apply 0.948815, gauge 0), errB 0.0345472, div 0.0221915, label Newton resid 5.71765e-15 (mean its 3.57581)
+k=35 t=0.35 errB=0.035439 E/Eex=0.996738 H/H0=nan div=0.0217656 minDetJ=0.906733
+  rezone at k=35 (t=0.35): 2.35583 s (setup 1.37761, apply 0.914124, gauge 0), errB 0.0406267, div 0.0308569, label Newton resid 9.76996e-15 (mean its 3.75116)
+k=40 t=0.4 errB=0.0419171 E/Eex=0.994933 H/H0=nan div=0.0304133 minDetJ=0.903643
+  rezone at k=40 (t=0.4): 2.21555 s (setup 1.25833, apply 0.889368, gauge 0), errB 0.0485751, div 0.0421752, label Newton resid 9.82547e-15 (mean its 3.84028)
+k=45 t=0.45 errB=0.0499499 E/Eex=0.992407 H/H0=nan div=0.0418581 minDetJ=0.924222
+  rezone at k=45 (t=0.45): 2.16472 s (setup 1.26635, apply 0.848722, gauge 0), errB 0.0562646, div 0.0530663, label Newton resid 9.99201e-15 (mean its 3.88773)
+k=50 t=0.5 errB=0.056897 E/Eex=0.990765 H/H0=nan div=0.0529475 minDetJ=0.970554
+  rezone at k=50 (t=0.5): 1.63138 s (setup 0.68085, apply 0.86864, gauge 0), errB 0.0598144, div 0.0533172, label Newton resid 5.66214e-15 (mean its 3.93808)
+k=55 t=0.55 errB=0.0591651 E/Eex=0.992732 H/H0=nan div=0.0534471 minDetJ=0.986756
+  rezone at k=55 (t=0.55): 1.77033 s (setup 0.77041, apply 0.929849, gauge 0), errB 0.056268, div 0.0533155, label Newton resid 9.99201e-15 (mean its 3.88773)
+k=60 t=0.6 errB=0.0547701 E/Eex=0.991454 H/H0=nan div=0.0536537 minDetJ=0.962952
+  rezone at k=60 (t=0.6): 2.36596 s (setup 1.39579, apply 0.913667, gauge 0), errB 0.0483714, div 0.0590287, label Newton resid 9.82547e-15 (mean its 3.84028)
+k=65 t=0.65 errB=0.0468857 E/Eex=0.993075 H/H0=nan div=0.0595492 minDetJ=0.94592
+  rezone at k=65 (t=0.65): 2.36531 s (setup 1.37394, apply 0.926857, gauge 0), errB 0.0421094, div 0.057785, label Newton resid 9.76996e-15 (mean its 3.75116)
+k=70 t=0.7 errB=0.0412267 E/Eex=0.993714 H/H0=nan div=0.0584095 minDetJ=0.938657
+  rezone at k=70 (t=0.7): 2.32294 s (setup 1.34359, apply 0.915269, gauge 0), errB 0.0386269, div 0.0536078, label Newton resid 5.71765e-15 (mean its 3.57581)
+k=75 t=0.75 errB=0.0382911 E/Eex=0.993689 H/H0=nan div=0.054117 minDetJ=0.942368
+  rezone at k=75 (t=0.75): 2.30165 s (setup 1.3331, apply 0.907003, gauge 0), errB 0.0364716, div 0.0484847, label Newton resid 9.99201e-15 (mean its 3.28646)
+k=80 t=0.8 errB=0.0363912 E/Eex=0.9933 H/H0=nan div=0.0488031 minDetJ=0.955316
+  rezone at k=80 (t=0.8): 2.1357 s (setup 1.21648, apply 0.86861, gauge 0), errB 0.0348359, div 0.044226, label Newton resid 9.10383e-15 (mean its 2.99653)
+k=85 t=0.85 errB=0.0348366 E/Eex=0.992699 H/H0=nan div=0.0443756 minDetJ=0.972558
+  rezone at k=85 (t=0.85): 2.13261 s (setup 1.28108, apply 0.800801, gauge 0), errB 0.0336752, div 0.0421929, label Newton resid 2.94209e-15 (mean its 2.77778)
+k=90 t=0.9 errB=0.0336965 E/Eex=0.991578 H/H0=nan div=0.0422423 minDetJ=0.987821
+  rezone at k=90 (t=0.9): 2.02169 s (setup 1.18453, apply 0.787224, gauge 0), errB 0.033184, div 0.0427481, label Newton resid 3.9968e-15 (mean its 2.58796)
+k=95 t=0.95 errB=0.033206 E/Eex=0.990167 H/H0=nan div=0.0427585 minDetJ=0.996886
+  rezone at k=95 (t=0.95): 2.35156 s (setup 1.37459, apply 0.942121, gauge 0), errB 0.0335032, div 0.0437515, label Newton resid 9.54792e-15 (mean its 1.88079)
+k=100 t=1 errB=0.0335134 E/Eex=0.989908 H/H0=nan div=0.0437522 minDetJ=0.999785
+  rezone at k=100 (t=1): 1.76553 s (setup 0.787819, apply 0.945376, gauge 0), errB 0.0340454, div 0.0438383, label Newton resid 0 (mean its 0)
+FINAL op=B_l2 gauge=none p=2 eps=6.0000e-01 rezones=20 b0=0: ||b_T-b_0||/||b_0||=2.5310e-02 errB(T)=3.4045e-02 E(T)/E(0)=9.9110e-01 H(T)/H(0)=nan flux_err=1.9903e-02 div=4.3838e-02 transfer_time=4.2892e+01 s, notfound=0, wall 8.3079e+01 s

@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
    int N = 8, p = 2, q = -1, fvB = 1, fvA = 1, nsteps = 100, every = 5, nq = -1;
    real_t epsA = 0.0, epsB = 0.3;
-   std::string field = "abc", opss = "all", csv, tag;
+   std::string field = "abc", opss = "all", csv, tag, gaugestr = "none";
    bool b0on = false, gradfrac = true;
    OptionsParser args(argc, argv);
    args.AddOption(&N, "-N", "--N", "Cells per direction.");
@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
    args.AddOption(&opss, "-ops", "--ops", "comma list or all.");
    args.AddOption(&nq, "-nq", "--nq", "Gauss points per direction for *_int.");
    args.AddOption(&gradfrac, "-gradfrac", "--gradfrac", "-no-gradfrac", "--no-gradfrac", "Gradient fraction of A.");
+   args.AddOption(&gaugestr, "-gauge", "--gauge", "Gauge fix after every A-route transfer: none | coulomb | jacobi:k.");
    args.AddOption(&csv, "-csv", "--csv", "Append rows to this CSV file.");
    args.AddOption(&tag, "-tag", "--tag", "Series label.");
    args.Parse();
@@ -46,6 +47,19 @@ int main(int argc, char *argv[])
    Problem pr(field, b0on, 0.0, 2.0);
    MeshCase MA(comm, sA, p, q), MB(comm, sB, p, q);
    MeshState SA(MA, pr), SB(MB, pr);
+   const GaugeSpec gspec = GaugeSpec::Parse(gaugestr);
+   std::unique_ptr<CoulombGauge> cgA, cgB;
+   if (gspec.On())
+   {
+      cgA.reset(new CoulombGauge(*MA.sp, *MA.ops));
+      cgB.reset(new CoulombGauge(*MB.sp, *MB.ops));
+      if (rank == 0)
+      {
+         std::cout << "gauge " << gspec.str << ": setup " << cgA->SetupTime() + cgB->SetupTime() << " s, max|L-K|/max|K| = "
+                   << cgA->StiffnessMismatch() << " / " << cgB->StiffnessMismatch() << std::endl;
+      }
+   }
+   const CoulombGauge *cgs[2] = {cgA.get(), cgB.get()};
    MeshState *S[2] = {&SA, &SB};
    MeshCase *M[2] = {&MA, &MB};
 
@@ -101,6 +115,13 @@ int main(int argc, char *argv[])
       int mesh = 0;           // 0: A, 1: B
       long long it_total = 0, inner_total = 0;
       int it_last = 0, inner_last = 0;
+      // gauge bookkeeping (last application)
+      const bool gon = isA && gspec.On();
+      int g_iters_last = 0;
+      long long g_iters_total = 0;
+      double g_time_last = 0.0, g_time_total = 0.0, t_tr_last = 0.0;
+      GaugeFixStats g_st;
+      real_t g_dB = std::nan(""), g_dH = std::nan("");
       long long nnf = plan[0]->Stats().nnotfound + plan[1]->Stats().nnotfound;
       real_t E0 = 0, H0 = 0, a0 = 0;
 
@@ -142,6 +163,16 @@ int main(int argc, char *argv[])
          row.Set("iters_last", it_last); row.Set("inner_last", inner_last);
          row.Set("iters_total", it_total); row.Set("inner_total", inner_total);
          row.Set("nnotfound", nnf);
+         row.Set("gauge", isA ? gspec.str : std::string("none"));
+         row.Set("t_transfer_last", t_tr_last);
+         row.Set("gauge_iters_last", g_iters_last); row.Set("gauge_iters_total", g_iters_total);
+         row.Set("gauge_time_last", g_time_last); row.Set("gauge_time_total", g_time_total);
+         row.Set("gauge_resid_before", gon && step > 0 ? (double)g_st.resid_before : std::nan(""));
+         row.Set("gauge_resid_after", gon && step > 0 ? (double)g_st.resid_after : std::nan(""));
+         row.Set("gauge_gf_before", gon && step > 0 ? (double)g_st.grad_fraction_before : std::nan(""));
+         row.Set("gauge_gf_after", gon && step > 0 ? (double)g_st.grad_fraction_after : std::nan(""));
+         row.Set("gauge_dB_rel", gon && step > 0 ? (double)g_dB : std::nan(""));
+         row.Set("gauge_dH_scaled", gon && step > 0 ? (double)g_dH : std::nan(""));
          if (!csv.empty()) { CsvAppend(comm, csv, row); }
          t_diag_cum += WallTime() - td;
          return d;
@@ -152,27 +183,57 @@ int main(int argc, char *argv[])
       {
          const double ts = WallTime();
          const int src = mesh, dstm = 1 - mesh;
+         const bool logged = (step % every == 0 || step == nsteps || step <= 2);
+         double t_gauge = 0.0;
          if (isA)
          {
             src_gf[src].SetFromTrueDofs(a_t);
             plan[src]->Apply(src_gf[src], dst_gf[dstm]);
             dst_gf[dstm].GetTrueDofs(a_t);
+            t_tr_last = WallTime() - ts;
+            if (gon)
+            {
+               Vector b_pre;
+               StateDiag d_pre;
+               if (logged)   // diagnostics, not counted in the timings
+               {
+                  S[dstm]->Compose(a_t, b_pre);
+                  d_pre = S[dstm]->diag->Evaluate(&a_t, b_pre, false);
+               }
+               g_st = gspec.Apply(*cgs[dstm], a_t, logged);
+               t_gauge = g_st.time;
+               g_iters_last = g_st.iters; g_iters_total += g_st.iters;
+               g_time_last = g_st.time; g_time_total += g_st.time;
+               if (logged)
+               {
+                  Vector b_post, zero;
+                  S[dstm]->Compose(a_t, b_post);
+                  zero.SetSize(b_pre.Size());
+                  zero = 0.0;
+                  g_dB = S[dstm]->diag->RTDistance(b_pre, b_post) / S[dstm]->diag->RTDistance(b_pre, zero);
+                  const StateDiag d_post = S[dstm]->diag->Evaluate(&a_t, b_post, false);
+                  g_dH = (d_post.helicity - d_pre.helicity) / d_pre.hel_scale;
+               }
+            }
+            const double tc = WallTime();
             S[dstm]->Compose(a_t, b_t);
+            t_step = t_tr_last + t_gauge + (WallTime() - tc);
          }
          else
          {
             src_gf[src].SetFromTrueDofs(b_t);
             plan[src]->Apply(src_gf[src], dst_gf[dstm]);
             dst_gf[dstm].GetTrueDofs(b_t);
+            t_tr_last = WallTime() - ts;
+            t_step = t_tr_last;
          }
          mesh = dstm;
-         t_step = WallTime() - ts;
          t_cum += t_step;
          const auto &st = plan[src]->Stats();
          it_last = st.iters; inner_last = st.inner_iters;
          it_total += st.iters; inner_total += st.inner_iters;
          if (!bfirst[mesh].Size()) { bfirst[mesh] = b_t; }
-         if (step % every == 0 || step == nsteps || step <= 2)
+         if (logged)
          {
             const StateDiag d = log(step);
             if (rank == 0 && (step % (10 * every) == 0 || step == nsteps || step == 1))

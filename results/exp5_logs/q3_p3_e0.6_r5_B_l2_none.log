@@ -1,0 +1,33 @@
+Options used:
+   --N 8
+   --order 3
+   --geom-order 3
+   --eps 0.6
+   --steps 100
+   --rezones 5
+   --op B_l2
+   --gauge none
+   --field abc
+   --no-b0
+   --fv 1
+   --every 5
+   --csv results/exp5_parts/q3_p3_e0.6_r5_B_l2_none.csv.tmp
+   --tag q3
+   --no-selftest
+t=0: errB=0.00151531 errA=nan E_B=39.4784 E_ex=39.4784 H=nan minDetJ=1
+k=10 t=0.1 errB=0.0015166 E/Eex=0.999999 H/H0=nan div=3.19208e-15 minDetJ=0.996709
+k=20 t=0.2 errB=0.00153325 E/Eex=0.999999 H/H0=nan div=3.15962e-15 minDetJ=0.956922
+  rezone at k=20 (t=0.2): 9.6988 s (setup 5.61272, apply 3.98483, gauge 0), errB 0.00199533, div 0.00179203, label Newton resid 9.76996e-15 (mean its 3.09204)
+k=30 t=0.3 errB=0.00209077 E/Eex=0.999999 H/H0=nan div=0.00173874 minDetJ=0.883401
+k=40 t=0.4 errB=0.00223264 E/Eex=0.999995 H/H0=nan div=0.00167248 minDetJ=0.73628
+  rezone at k=40 (t=0.4): 9.12367 s (setup 5.64711, apply 3.35089, gauge 0), errB 0.00866052, div 0.0069186, label Newton resid 9.99201e-15 (mean its 3.9104)
+k=50 t=0.5 errB=0.00922669 E/Eex=0.9999 H/H0=nan div=0.00687551 minDetJ=0.903475
+k=60 t=0.6 errB=0.00866052 E/Eex=0.999938 H/H0=nan div=0.0069186 minDetJ=1
+  rezone at k=60 (t=0.6): 5.26148 s (setup 1.61899, apply 3.51042, gauge 0), errB 0.00866052, div 0.0069186, label Newton resid 9.99201e-15 (mean its 3.9104)
+k=70 t=0.7 errB=0.00785824 E/Eex=0.999988 H/H0=nan div=0.00701623 minDetJ=0.89182
+k=80 t=0.8 errB=0.00772762 E/Eex=1.00002 H/H0=nan div=0.00709471 minDetJ=0.805954
+  rezone at k=80 (t=0.8): 10.2451 s (setup 6.46562, apply 3.66674, gauge 0), errB 0.00479153, div 0.00848583, label Newton resid 9.76996e-15 (mean its 3.09204)
+k=90 t=0.9 errB=0.00481308 E/Eex=1.00001 H/H0=nan div=0.00851912 minDetJ=0.961919
+k=100 t=1 errB=0.00483471 E/Eex=1.00001 H/H0=nan div=0.00852165 minDetJ=0.958774
+  rezone at k=100 (t=1): 8.32353 s (setup 4.86563, apply 3.39235, gauge 0), errB 0.00382651, div 0.0082814, label Newton resid 0 (mean its 0)
+FINAL op=B_l2 gauge=none p=3 eps=6.0000e-01 rezones=5 b0=0: ||b_T-b_0||/||b_0||=3.5163e-03 errB(T)=3.8265e-03 E(T)/E(0)=1.0000e+00 H(T)/H(0)=nan flux_err=7.5744e-05 div=8.2814e-03 transfer_time=4.2653e+01 s, notfound=0, wall 9.0439e+01 s

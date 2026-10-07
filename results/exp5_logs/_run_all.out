@@ -1,0 +1,10 @@
+108 jobs, 2 at a time
+[lagq3_p3_e0.3] rc=0 202 s
+[lagq3_p3_e0.6] rc=0 203 s
+[lagb0_p2_e0.3] rc=0 67 s
+[main_p3_e0.3_r20_B_l2c_none] rc=0 457 s
+[main_p3_e0.3_r20_B_l2_none] rc=0 217 s
+[main_p3_e0.3_r20_B_int_none] rc=0 1026 s
+[main_p3_e0.3_r20_A_int_none] rc=0 413 s
+[main_p3_e0.3_r20_A_l2_coulomb] rc=0 383 s
+[main_p3_e0.3_r20_A_int_coulomb] rc=0 515 s

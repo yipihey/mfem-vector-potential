@@ -1,0 +1,6 @@
+4 jobs, 2 at a time
+[q3_p3_e0.6_r5_B_l2c_none] rc=0 122 s
+[q3_p3_e0.6_r5_A_int_coulomb] rc=0 179 s
+[q3_p3_e0.6_r5_B_l2_none] rc=0 91 s
+[q3_p3_e0.6_r5_A_l2_coulomb] rc=0 158 s
+wrote results/exp5_ale.csv: 8355 rows

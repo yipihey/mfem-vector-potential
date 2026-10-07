@@ -1,0 +1,27 @@
+== [g_b0] exp4_repeat -N 8 -field abc -epsB 0.3 -p 2 -b0 -n 100 -every 5 -ops A_int -gauge coulomb
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 100
+   --every 5
+   --ops A_int
+   --nq -1
+   --gradfrac
+   --gauge coulomb
+   --csv results/exp4_gauge_parts/g_b0.csv
+   --tag g_b0
+gauge coulomb: setup 3.58161 s, max|L-K|/max|K| = 2.14672e-15 / 2.50756e-15
+N=8 p=2 q=2  A: N8_uni  B: N8_def0.3f1  ND=12288 RT=12288  n=100
+A_int step    1 B  E/E0=9.996e-01 errB=2.938e-02 div_rel=1.262e-15 |a|=1.413e+00 H/H0=9.992e-01 t_cum=8.747e-01
+A_int step   50 A  E/E0=1.002e+00 errB=6.321e-02 div_rel=1.240e-15 |a|=1.413e+00 H/H0=9.982e-01 t_cum=3.832e+01
+A_int step  100 A  E/E0=1.009e+00 errB=1.068e-01 div_rel=1.207e-15 |a|=1.413e+00 H/H0=9.983e-01 t_cum=7.418e+01
+A_int done: setup 2.42 s, transfers 74.2 s (0.742 s/remap), diagnostics 91.9 s, wall 260 s, not found 0
+total wall 271 s
+   rc=0  271 s

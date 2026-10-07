@@ -1,6 +1,7 @@
 // exp_transfer_common.hpp -- helpers shared by exp3_remap and exp4_repeat.
 #pragma once
 #include "vp_transfer.hpp"
+#include "vp_gauge.hpp"
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -150,6 +151,29 @@ struct MeshState
       b.GetTrueDofs(b_t);
    }
    void Compose(const Vector &a_t, Vector &b_t) const { ComposeB(*mc.ops, b0_t, a_t, b_t); }
+};
+
+/// Gauge-fixing option "none" | "coulomb" | "jacobi:k" (k Chebyshev-Jacobi sweeps; experimental).
+struct GaugeSpec
+{
+   enum Kind { None, Coulomb, Jacobi } kind = None;
+   int k = 0;
+   std::string str = "none";
+   static GaugeSpec Parse(const std::string &s)
+   {
+      GaugeSpec g;
+      g.str = s;
+      if (s == "none" || s.empty()) { g.kind = None; }
+      else if (s == "coulomb") { g.kind = Coulomb; }
+      else if (s.rfind("jacobi:", 0) == 0) { g.kind = Jacobi; g.k = std::stoi(s.substr(7)); MFEM_VERIFY(g.k >= 1, "jacobi:k needs k>=1"); }
+      else { MFEM_ABORT("unknown gauge option '" << s << "' (none | coulomb | jacobi:k)"); }
+      return g;
+   }
+   bool On() const { return kind != None; }
+   GaugeFixStats Apply(const CoulombGauge &cg, Vector &a_t, bool diagnostics) const
+   {
+      return kind == Jacobi ? cg.JacobiGaugeSmooth(a_t, k, diagnostics) : cg.Apply(a_t, 1e-12, diagnostics);
+   }
 };
 
 inline void SetDiag(CsvRow &r, const std::string &pre, const StateDiag &d)

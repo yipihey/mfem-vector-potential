@@ -1,0 +1,54 @@
+== [g_jac] exp4_repeat -N 8 -field abc -epsB 0.3 -p 2 -no-b0 -n 100 -every 5 -ops A_int -gauge jacobi:5
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --no-b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 100
+   --every 5
+   --ops A_int
+   --nq -1
+   --gradfrac
+   --gauge jacobi:5
+   --csv results/exp4_gauge_parts/g_jac.csv
+   --tag g_jac
+gauge jacobi:5: setup 2.16728 s, max|L-K|/max|K| = 2.14672e-15 / 2.50756e-15
+N=8 p=2 q=2  A: N8_uni  B: N8_def0.3f1  ND=12288 RT=12288  n=100
+A_int step    1 B  E/E0=9.996e-01 errB=2.945e-02 div_rel=1.266e-15 |a|=1.413e+00 H/H0=9.992e-01 t_cum=4.441e-01
+A_int step   50 A  E/E0=1.000e+00 errB=6.531e-02 div_rel=1.209e-15 |a|=1.412e+00 H/H0=9.967e-01 t_cum=2.400e+01
+A_int step  100 A  E/E0=1.007e+00 errB=1.104e-01 div_rel=1.213e-15 |a|=1.411e+00 H/H0=9.956e-01 t_cum=4.900e+01
+A_int done: setup 1.63 s, transfers 49 s (0.49 s/remap), diagnostics 48.6 s, wall 169 s, not found 0
+total wall 176 s
+   rc=0  176 s
+== [g_jac] exp4_repeat -N 8 -field abc -epsB 0.3 -p 2 -no-b0 -n 100 -every 5 -ops A_int -gauge jacobi:20
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --no-b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 100
+   --every 5
+   --ops A_int
+   --nq -1
+   --gradfrac
+   --gauge jacobi:20
+   --csv results/exp4_gauge_parts/g_jac.csv
+   --tag g_jac
+gauge jacobi:20: setup 2.78306 s, max|L-K|/max|K| = 2.14672e-15 / 2.50756e-15
+N=8 p=2 q=2  A: N8_uni  B: N8_def0.3f1  ND=12288 RT=12288  n=100
+A_int step    1 B  E/E0=9.996e-01 errB=2.945e-02 div_rel=1.236e-15 |a|=1.413e+00 H/H0=9.992e-01 t_cum=5.302e-01
+A_int step   50 A  E/E0=1.002e+00 errB=6.336e-02 div_rel=1.203e-15 |a|=1.413e+00 H/H0=9.982e-01 t_cum=2.578e+01
+A_int step  100 A  E/E0=1.009e+00 errB=1.070e-01 div_rel=1.232e-15 |a|=1.413e+00 H/H0=9.983e-01 t_cum=5.084e+01
+A_int done: setup 1.54 s, transfers 50.8 s (0.508 s/remap), diagnostics 51.9 s, wall 179 s, not found 0
+total wall 188 s
+   rc=0  189 s

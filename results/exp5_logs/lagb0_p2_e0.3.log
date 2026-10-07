@@ -1,0 +1,28 @@
+Options used:
+   --N 8
+   --order 2
+   --geom-order 2
+   --eps 0.3
+   --steps 100
+   --rezones 0
+   --op A_int
+   --gauge none
+   --field abc
+   --b0
+   --fv 1
+   --every 1
+   --csv results/exp5_parts/lagb0_p2_e0.3.csv.tmp
+   --tag lag_b0
+   --no-selftest
+t=0: errB=0.0227396 errA=0.00276252 E_B=39.6581 E_ex=39.6684 H=nan minDetJ=1
+k=10 t=0.1 errB=0.0227445 E/Eex=0.99974 H/H0=nan div=1.18968e-15 minDetJ=0.999097
+k=20 t=0.2 errB=0.0228083 E/Eex=0.999735 H/H0=nan div=1.18661e-15 minDetJ=0.988186
+k=30 t=0.3 errB=0.023013 E/Eex=0.99972 H/H0=nan div=1.17789e-15 minDetJ=0.957601
+k=40 t=0.4 errB=0.023314 E/Eex=0.999701 H/H0=nan div=1.16682e-15 minDetJ=0.919025
+k=50 t=0.5 errB=0.0234698 E/Eex=0.999692 H/H0=nan div=1.16167e-15 minDetJ=0.901025
+k=60 t=0.6 errB=0.023314 E/Eex=0.999701 H/H0=nan div=1.16682e-15 minDetJ=0.919025
+k=70 t=0.7 errB=0.023013 E/Eex=0.99972 H/H0=nan div=1.17789e-15 minDetJ=0.957601
+k=80 t=0.8 errB=0.0228083 E/Eex=0.999735 H/H0=nan div=1.18661e-15 minDetJ=0.988186
+k=90 t=0.9 errB=0.0227445 E/Eex=0.99974 H/H0=nan div=1.18968e-15 minDetJ=0.999097
+k=100 t=1 errB=0.0227396 E/Eex=0.999741 H/H0=nan div=1.18993e-15 minDetJ=1
+FINAL op=A_int gauge=none p=2 eps=3.0000e-01 rezones=0 b0=1: ||b_T-b_0||/||b_0||=0.0000e+00 errB(T)=2.2740e-02 E(T)/E(0)=1.0000e+00 H(T)/H(0)=nan flux_err=8.8818e-16 div=1.1899e-15 transfer_time=0.0000e+00 s, notfound=0, wall 6.5836e+01 s
