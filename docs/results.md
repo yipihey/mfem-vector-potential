@@ -230,49 +230,117 @@ every 10 or 2 steps:
 
 ## 8. Performance and scalability (Experiment 7)
 
-Pending: see `results/exp7_summary.md` when available.
+One remap (deformed to uniform, abc with mean field), 1 rank unless stated,
+quiet machine, minimum of two repeats. "Steady" reuses the point-location
+plan of a fixed mesh pair; "one-shot" includes GSLIB setup and search.
+
+| p | N | ND dofs | A_pt | A_int | A_int + Coulomb | A_int + Jacobi:20 | A_l2 + Coulomb | B_l2 | B_l2c |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 | 16 | 98k | 1.0 / 0.28 s | 4.0 / 1.1 | 4.5 / 1.4 | 4.3 / 1.2 | 5.1 / 2.2 | 4.4 / 2.0 | 12.8 / 10.1 |
+| 2 | 32 | 786k | 9.0 / 2.4 | 37 / 9.3 | 40 / 14 | 37 / 10 | 48 / 21 | 40 / 14 | 191 / 164 |
+| 3 | 16 | 332k | 4.4 / 1.4 | 25 / 8.2 | 27 / 11 | 25 / 8.5 | 22 / 11 | 16 / 7.1 | 58 / 47 |
+| 4 | 12 | 332k | 7.2 / 2.3 | 44 / 16 | 51 / 23 | 44 / 16 | 32 / 18 | 25 / 11 | 58 / 45 |
+
+- Scaling with dofs: all local operators and the L2 mass projections scale
+  linearly (slopes 0.98 to 1.07). B_l2c is the only super-linear one (slope
+  1.24 to 1.47), because the Schur-complement outer iterations grow with N at
+  p >= 3 (29 to 34 at p = 2; 39 to 58 at p = 3; 53 to 69 at p = 4) and each
+  carries an inner mass solve. Mass-solve iterations saturate in N (RT 6 to
+  12, ND 12 to 30). Coulomb AMG-CG iterations are bounded (14 to 23).
+- Where the time goes: point location plus source evaluation is 80 to 95 %
+  of A_int and 70 to 80 % of the L2 variants; the dof functionals are 4 to
+  8 %; the solve is 70 to 80 % of B_l2c. The gauge fix is 4 to 16 % (Coulomb)
+  or 1 to 2 % (Jacobi:20) of a remap.
+- Discrete curl: 2 to 8 ns per ND dof; C_h has 2(p+1) nonzeros per ND dof
+  and D_h has p+1 per RT dof, independent of N. Composition b = b0 + C_h a is
+  2 ms for 332k dofs. These are negligible.
+- Memory: 2.6 to 3.0 kB per ND dof for A_int, 3.8 to 3.9 kB for B_l2c (whole
+  process, two meshes). The Coulomb gauge object as implemented (assembled
+  ND mass, RAP, AMG hierarchy) costs 7 to 19 kB per dof and 2.6 to 10 remap
+  times to build; this is an implementation cost (L is the H1 stiffness
+  matrix and could be assembled directly or applied matrix-free), not an
+  intrinsic one.
+- Strong scaling on 4 cores: speedup 3.0 to 3.7 at 4 ranks for all
+  operators (shared-memory MPI only; no communication-latency test).
+- Extrapolated to 1e9 dofs: about 50 us per dof for a local A transfer and
+  at least 250 us per dof for B_l2c, with the super-linear slope making the
+  latter worse. A cosmological code could accept the local operations, the
+  mass solves and Jacobi gauge smoothing per remap; it would hesitate at a
+  Schur-complement divergence clean on every remap, and the distributed
+  point-location cost is untested here.
 
 ## 9. Assessment against the success criteria and recommendation
 
 | criterion | A route | B route (B_l2c) |
 |---|---|---|
-| div_h B at roundoff | yes, for any transfer, any mesh | yes, but only after a global solve |
+| div_h B at roundoff | yes, for any transfer, any mesh, no solve | yes, but only after a global Schur-complement solve |
 | O(h^p) convergence of B | yes | yes |
 | robust on distorted meshes | yes (static); transfers degrade with p and eps | same |
-| low error across one rezone | 1.3 to 3x floor (A_int), 9x (A_pt at p=4) | 1.15 to 1.4x floor |
-| no secular loss under many remaps | gauge growth unless projected; A_l2 + Coulomb stable; A_int, A_pt not | stable; energy contraction (-6 %/100 at p=2, -0.03 % at p=3) |
-| competitive with direct B | no at p >= 3; equal at p = 2 for A_l2 | - |
-| cost and locality | local transfer + local gauge smoothing possible; L2 projection needs a mass solve | mass solve + Schur-complement solve (global) |
-| exact mean flux | yes, 1e-15 | no, drifts |
+| low error across one rezone | 1.3 to 3x floor (A_int), up to 9x (A_pt) | 1.15 to 1.4x floor |
+| no secular loss under many remaps | gauge part grows unless controlled; with gauge control A_l2 stable, A_int slowly growing in harsh ping-pong, both fine in the ALE cycle; A_pt unusable | stable; energy contraction (-6 %/100 at p=2, -0.03 % at p=3) |
+| competitive with direct B | within 3 % in the ALE cycle at p=2, 6 to 46 % worse at p=3 or large eps; 2 to 7x worse after 100 harsh ping-pong remaps | - |
+| cost and locality | local, linear scaling, 3 to 18x cheaper than B_l2c; gauge control can be local | mass solve + global Schur solve, super-linear in this implementation |
+| exact mean flux | yes, 1e-15, but a deformed frozen-in B0 needs a curl inversion at rezone | no, drifts (6e-4 per 100 remaps at p=2) |
 
-Recommendation among the four options of the brief:
+What the evidence says:
 
-1. **Use A as the primary magnetic state: not recommended for an AREPO-style
-   code.** It adds a gauge-dependent variable whose gauge part grows under
-   remapping, needs gauge control, and does not improve B accuracy.
-   (MHD-ALE's own choice to evolve A is a different matter: its induction
-   update is built on it and its remaps move nodes only slightly.)
-2. **Use A only during remapping: not recommended.** Converting B to A on the
-   source mesh is itself a curl inversion (a global curl-curl or
-   Schur-complement solve) and the resulting transfer is no more accurate
-   than B_l2c, which is the same solve done once on the target.
-3. **Retain a B representation with a compatible divergence-cleaning
-   projection: recommended.** The combination "L2 projection of B into
-   RT_{p-1} on the new mesh, then M-orthogonal projection onto ker D_h" is
-   the most accurate and the only unconditionally stable transfer measured,
-   gives roundoff divergence, and is exactly the constrained least-squares A
-   projection of the brief. Its costs are one well-conditioned RT mass solve
-   (bounded Jacobi-CG iterations, matrix-free) and one Poisson-like
-   Schur-complement solve with AMG (bounded outer iterations). Its two
-   weaknesses, energy contraction at low order and mean-flux drift, are
-   addressed by using p >= 3 and by carrying the harmonic mean field B0
-   separately (as the A route does), which costs nothing.
+- The strongest promised result, a transfer of (B0, A_old, M_old) to
+  (B0, A_new, M_new) that guarantees the discrete divergence constraint
+  independently of geometry, is real and cheap: any A transfer does it, with
+  no global solve, and the curl part carries no net flux by discrete Stokes.
+- But it is not free of accuracy or stability cost. The transfer of A does
+  not commute with the gradient, so (i) gauge content of A leaks into B, and
+  (ii) the gauge content grows with each remap and must be projected or
+  smoothed away. With that control, the A route matches the cleaned B route
+  only in the benign regime (small displacements, p = 2) and is worse
+  otherwise. The cheapest A transfer (point interpolation, which is what
+  MHD-ALE's `-rma 0` does) is unstable under many large remaps.
+- The cleaned B route is the most accurate and the only transfer that was
+  stable in every test, and it is mathematically the constrained
+  least-squares A projection of the brief. Its price is a global solve per
+  rezone with super-linear cost in this implementation, an energy
+  contraction at low order, and a drifting mean flux.
+- Nothing in these results argues for changing MHD-ALE: its state is A, its
+  remaps move nodes slightly, and both of its A remaps kept div B at 5e-14
+  with equal accuracy; the pseudo-time remap buys 10 to 30x smaller energy
+  jumps that are invisible next to the Lagrangian-step drift, at 1.7 to 2x
+  the wall time.
+
+Recommendation among the four options of the brief, for an AREPO-style code
+whose state is B and which rezones occasionally:
+
+1. **Use A as the primary magnetic state: not recommended.** It adds a
+   gauge-dependent variable, needs gauge control, changes the induction
+   update, and does not improve B accuracy at rezoning.
+2. **Use A only during remapping: not recommended.** Obtaining A from B on
+   the old mesh is a curl inversion, i.e. the same global solve as the
+   divergence clean, after which the A transfer is less accurate than B_l2c.
+3. **Retain the B representation with a compatible L2 projection plus
+   divergence-cleaning projection (B_l2c): recommended.** It is the most
+   accurate and unconditionally stable transfer measured, gives roundoff
+   divergence, and is exactly the constrained projection. Use p >= 3 to
+   avoid the energy contraction, carry the harmonic mean field B0
+   separately (as the A route does, at no cost) to remove the flux drift,
+   and budget one well-conditioned RT mass solve plus one AMG-preconditioned
+   Schur-complement solve per rezone. For a cosmological-scale code the
+   Schur solve is the item to engineer (a better preconditioner, or a
+   cheaper approximate clean when the uncleaned divergence, which sits at
+   the B-error level, is tolerable between rezones).
 4. **Hybrid constrained projection: identical to 3** on a periodic domain;
-   do not implement it through A.
+   do not implement it through A (the curl-curl / AMS route costs 5 to 10x
+   more to solve).
+
+If a future design did carry A as state anyway (as MHD-ALE does), the
+measured recipe is: integrated-dof (edge-circulation) transfer, never point
+interpolation, followed by a local Chebyshev-Jacobi gauge smoothing of about
+20 sweeps; this gives linear cost, roundoff divergence, exact mean flux, and
+accuracy within a few percent of B_l2c in the small-displacement regime. The
+remaining gaps are a harsh-remap growth mode of A_int that gauge control does
+not remove, and the deformed mean-field problem at rezones when B0 != 0.
 
 Caveats that bound these conclusions: one mesh family (smooth periodic
 deformations of a Cartesian hex box), smooth analytic fields, serial or
-few-rank runs, N <= 32, and remap sequences that are harsher (ping-pong
-between very different meshes) than a real ALE code's. The small-displacement
-regime of MHD-ALE shows all operators close to the identity; there the
-cheapest local A transfer was adequate for 14 remaps.
+few-rank runs, N <= 32, no distributed point-location cost, and remap
+sequences that are harsher (ping-pong between very different meshes) than a
+real ALE code's. Do not proceed to AREPO integration on the basis of the A
+route; the evidence does not establish a benefit over a compatible B remap.

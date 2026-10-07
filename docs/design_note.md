@@ -185,3 +185,33 @@ transport remap). It has no direct B remap (its state is A). Our standalone
 B-route therefore represents what an AREPO-style B-based code would do, and
 the MHD-ALE experiment measures how its two A-remaps behave under frequent
 forced rezoning.
+
+## 10. Corrections and additions after the experiments
+
+- Section 3 claimed that constants lie in RT_{p-1} so Pi_RT(B0) is exact.
+  This is true only on affine elements. Under the contravariant Piola map a
+  constant physical field pulls back to adj(J) B0, which is not polynomial of
+  the right degree on curved elements. The pointwise projection of B0 then
+  has divergence up to O(1) (Experiment 2); the face-flux projection keeps
+  D_h b0 = 0 to roundoff and the exact slice flux, at the price of a
+  pointwise error of order the geometric interpolation error. Always project
+  B0 with face-flux dofs.
+- C_h and G_h are geometry independent bitwise. D_h as assembled by MFEM's
+  DivergenceInterpolator returns L2 point values of the divergence and is
+  therefore a row scaling (1/detJ at the L2 nodes) of the topological
+  operator; its kernel is geometry independent, its entries are not.
+- A_h converges at O(h^{p+1}) on affine meshes (ND_p contains P_p), dropping
+  to O(h^p) on non-affine ones; B_h converges at O(h^p) in both cases.
+- Transfers of A do not commute with G_h, even the integrated ones (only up
+  to the quadrature error of the kink of grad chi_h across source-element
+  faces). The gauge part of A is never damped by a transfer and grows under
+  repeated remaps; a Coulomb projection (AMG-CG on the H1 stiffness matrix,
+  bounded iterations) or a local Chebyshev-Jacobi smoothing removes it
+  without changing B (verified to 1e-15) or the helicity (4e-14).
+- On the torus the constrained projection argmin ||C_h a - b||_M is the
+  M-orthogonal projection of b onto ker D_h minus its harmonic part, i.e. the
+  same operator as "L2-project B then clean", verified to 2.5e-11.
+- A frozen-in constant mean field is not constant after a Lagrangian
+  deformation; its deviation from B0 is a zero-mean curl field that a
+  transfer of a alone loses. With B0 != 0 an A-route rezone therefore needs
+  a curl inversion of that part or a direct B transfer of it.
