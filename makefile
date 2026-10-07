@@ -25,14 +25,14 @@ LIB   = build/libvp.a
 .PHONY: all clean
 all: $(BINS)
 
-build/%.o: src/%.cpp src/vp_core.hpp
+build/%.o: src/%.cpp $(wildcard src/*.hpp)
 	@mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(LIB): $(OBJS)
 	ar rcs $@ $^
 
-bin/%: experiments/%.cpp $(LIB) src/vp_core.hpp $(wildcard experiments/*.hpp)
+bin/%: experiments/%.cpp $(LIB) $(wildcard src/*.hpp) $(wildcard experiments/*.hpp)
 	@mkdir -p bin
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LIB) $(MFEM_LIBS)
 

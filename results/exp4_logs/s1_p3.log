@@ -1,0 +1,25 @@
+== [s1_p3] -N 8 -p 3 -field abc -no-b0 -epsB 0.3 -n 100 -every 5 -ops all
+Options used:
+   --N 8
+   --order 3
+   --geom-order -1
+   --field abc
+   --no-b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 100
+   --every 5
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp4_parts/s1_p3.csv
+   --tag s1_p3
+N=8 p=3 q=3  A: N8_uni  B: N8_def0.3f1  ND=41472 RT=41472  n=100
+A_pt step    1 B  E/E0=1.000e+00 errB=2.179e-03 div_rel=3.247e-15 |a|=1.414e+00 H/H0=1.000e+00 t_cum=3.432e-01
+A_pt step   50 A  E/E0=1.724e+04 errB=1.313e+02 div_rel=1.188e-13 |a|=2.207e+01 H/H0=-3.037e+00 t_cum=1.530e+01
+A_pt step  100 A  E/E0=2.644e+14 errB=1.626e+07 div_rel=1.423e-08 |a|=2.762e+06 H/H0=-8.144e+10 t_cum=2.589e+01
+A_pt done: setup 0.894 s, transfers 25.9 s (0.259 s/remap), diagnostics 107 s, wall 134 s, not found 0
+A_int step    1 B  E/E0=1.000e+00 errB=2.179e-03 div_rel=3.247e-15 |a|=1.414e+00 H/H0=1.000e+00 t_cum=1.152e+00
+A_int step   50 A  E/E0=1.002e+00 errB=2.119e-02 div_rel=3.172e-15 |a|=1.415e+00 H/H0=1.001e+00 t_cum=6.343e+01

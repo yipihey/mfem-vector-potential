@@ -1,0 +1,240 @@
+== [d] -N 8 -p 1 -field abc -b0 -eps1 0.3 -m2 fine:12 -ops all
+Options used:
+   --N 8
+   --order 1
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:12
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 0.0851887 s
+  [t] mesh state (b0, diag) 0.141826 s
+M1 N8_def0.3f1 detJ [0.87664,1.08806] ND=1536 RT=1536
+M2 N12_uni detJ [1,1] ND=5184 RT=5184
+  [t] M1 projection+diag 0.184234 s
+  [t] M2 reference projections+diag 0.403626 s
+  [t] evaluator setup 0.00250416 s
+  [t] A_pt 0.344448 s
+A_pt   errB_rel=1.986e-01 (ref 1.501e-01) div_rel=2.080e-16 dE/E1=-6.037e-02 t_oneshot=1.051e-01 iters=0 notfound=0
+  [t] A_int 0.595 s
+A_int  errB_rel=1.856e-01 (ref 1.501e-01) div_rel=2.128e-16 dE/E1=-6.485e-02 t_oneshot=3.459e-01 iters=0 notfound=0
+  [t] A_l2 0.955 s
+A_l2   errB_rel=1.679e-01 (ref 1.501e-01) div_rel=2.230e-16 dE/E1=-2.763e-02 t_oneshot=7.091e-01 iters=25 notfound=0
+  [t] B_pt 0.177 s
+B_pt   errB_rel=2.577e-01 (ref 1.501e-01) div_rel=2.021e-01 dE/E1=-6.450e-03 t_oneshot=5.587e-02 iters=0 notfound=0
+  [t] B_int 0.584 s
+B_int  errB_rel=1.847e-01 (ref 1.501e-01) div_rel=8.292e-02 dE/E1=-6.493e-02 t_oneshot=4.640e-01 iters=0 notfound=0
+  [t] B_l2 0.915 s
+B_l2   errB_rel=1.814e-01 (ref 1.501e-01) div_rel=5.474e-02 dE/E1=-6.705e-02 t_oneshot=7.484e-01 iters=7 notfound=0
+  [t] B_l2c 2.11 s
+B_l2c  errB_rel=1.805e-01 (ref 1.501e-01) div_rel=2.589e-14 dE/E1=-6.737e-02 t_oneshot=1.952e+00 iters=26 notfound=0
+total wall 6.5 s
+   rc=0  7 s
+== [d] -N 8 -p 2 -field abc -b0 -eps1 0.3 -m2 fine:12 -ops all
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:12
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 0.376652 s
+  [t] mesh state (b0, diag) 1.6764 s
+M1 N8_def0.3f1 detJ [0.901025,1.09897] ND=12288 RT=12288
+M2 N12_uni detJ [1,1] ND=41472 RT=41472
+  [t] M1 projection+diag 1.97203 s
+  [t] M2 reference projections+diag 4.25424 s
+  [t] evaluator setup 0.0107741 s
+  [t] A_pt 3.56824 s
+A_pt   errB_rel=3.153e-02 (ref 1.015e-02) div_rel=1.793e-15 dE/E1=2.850e-04 t_oneshot=1.006e+00 iters=0 notfound=0
+  [t] A_int 6.58 s
+A_int  errB_rel=2.470e-02 (ref 1.015e-02) div_rel=1.775e-15 dE/E1=-1.229e-04 t_oneshot=4.007e+00 iters=0 notfound=0
+  [t] A_l2 6.98 s
+A_l2   errB_rel=3.027e-02 (ref 1.015e-02) div_rel=1.784e-15 dE/E1=2.836e-04 t_oneshot=4.420e+00 iters=20 notfound=0
+  [t] B_pt 1.83 s
+B_pt   errB_rel=2.584e-02 (ref 1.015e-02) div_rel=1.650e-02 dE/E1=-8.993e-04 t_oneshot=6.316e-01 iters=0 notfound=0
+  [t] B_int 12 s
+B_int  errB_rel=2.348e-02 (ref 1.015e-02) div_rel=4.361e-03 dE/E1=-1.960e-04 t_oneshot=1.079e+01 iters=0 notfound=0
+  [t] B_l2 5.34 s
+B_l2   errB_rel=2.224e-02 (ref 1.015e-02) div_rel=7.711e-03 dE/E1=-3.607e-04 t_oneshot=4.027e+00 iters=8 notfound=0
+  [t] B_l2c 12.3 s
+B_l2c  errB_rel=2.220e-02 (ref 1.015e-02) div_rel=4.655e-15 dE/E1=-3.623e-04 t_oneshot=1.103e+01 iters=31 notfound=0
+total wall 56.8 s
+   rc=0  58 s
+== [d] -N 8 -p 3 -field abc -b0 -eps1 0.3 -m2 fine:12 -ops all
+Options used:
+   --N 8
+   --order 3
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:12
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 1.62897 s
+  [t] mesh state (b0, diag) 11.2713 s
+M1 N8_def0.3f1 detJ [0.909777,1.09022] ND=41472 RT=41472
+M2 N12_uni detJ [1,1] ND=139968 RT=139968
+  [t] M1 projection+diag 16.3277 s
+  [t] M2 reference projections+diag 39.8978 s
+  [t] evaluator setup 0.0478336 s
+  [t] A_pt 27.834 s
+A_pt   errB_rel=6.195e-03 (ref 4.496e-04) div_rel=4.631e-15 dE/E1=4.001e-05 t_oneshot=6.666e+00 iters=0 notfound=0
+  [t] A_int 55.4 s
+A_int  errB_rel=2.684e-03 (ref 4.496e-04) div_rel=4.665e-15 dE/E1=8.712e-06 t_oneshot=3.357e+01 iters=0 notfound=0
+  [t] A_l2 45.1 s
+A_l2   errB_rel=3.585e-03 (ref 4.496e-04) div_rel=4.673e-15 dE/E1=1.014e-05 t_oneshot=2.469e+01 iters=16 notfound=0
+  [t] B_pt 13.2 s
+B_pt   errB_rel=2.066e-03 (ref 4.496e-04) div_rel=4.701e-03 dE/E1=1.767e-05 t_oneshot=4.758e+00 iters=0 notfound=0
+  [t] B_int 135 s
+B_int  errB_rel=1.624e-03 (ref 4.496e-04) div_rel=1.319e-03 dE/E1=3.410e-06 t_oneshot=1.269e+02 iters=0 notfound=0
+  [t] B_l2 32.4 s
+B_l2   errB_rel=1.516e-03 (ref 4.496e-04) div_rel=2.103e-03 dE/E1=-3.724e-06 t_oneshot=2.399e+01 iters=8 notfound=0
+  [t] B_l2c 65.6 s
+B_l2c  errB_rel=1.502e-03 (ref 4.496e-04) div_rel=1.498e-15 dE/E1=-3.765e-06 t_oneshot=5.707e+01 iters=48 notfound=0
+total wall 444 s
+   rc=0  444 s
+== [d] -N 8 -p 1 -field abc -b0 -eps1 0.3 -m2 fine:16 -ops all
+Options used:
+   --N 8
+   --order 1
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:16
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 0.237611 s
+  [t] mesh state (b0, diag) 0.426751 s
+M1 N8_def0.3f1 detJ [0.87664,1.08806] ND=1536 RT=1536
+M2 N16_uni detJ [1,1] ND=12288 RT=12288
+  [t] M1 projection+diag 0.305267 s
+  [t] M2 reference projections+diag 1.70004 s
+  [t] evaluator setup 0.0110987 s
+  [t] A_pt 1.54703 s
+A_pt   errB_rel=2.048e-01 (ref 1.128e-01) div_rel=2.604e-16 dE/E1=-3.607e-02 t_oneshot=4.546e-01 iters=0 notfound=0
+  [t] A_int 2.47 s
+A_int  errB_rel=1.802e-01 (ref 1.128e-01) div_rel=2.529e-16 dE/E1=-4.696e-02 t_oneshot=1.428e+00 iters=0 notfound=0
+  [t] A_l2 4.28 s
+A_l2   errB_rel=1.976e-01 (ref 1.128e-01) div_rel=2.476e-16 dE/E1=-1.622e-02 t_oneshot=3.221e+00 iters=29 notfound=0
+  [t] B_pt 0.765 s
+B_pt   errB_rel=2.436e-01 (ref 1.128e-01) div_rel=1.881e-01 dE/E1=-6.942e-03 t_oneshot=2.317e-01 iters=0 notfound=0
+  [t] B_int 2.58 s
+B_int  errB_rel=1.786e-01 (ref 1.128e-01) div_rel=6.376e-02 dE/E1=-4.763e-02 t_oneshot=2.042e+00 iters=0 notfound=0
+  [t] B_l2 3 s
+B_l2   errB_rel=1.760e-01 (ref 1.128e-01) div_rel=5.389e-02 dE/E1=-4.858e-02 t_oneshot=2.494e+00 iters=9 notfound=0
+  [t] B_l2c 7.77 s
+B_l2c  errB_rel=1.754e-01 (ref 1.128e-01) div_rel=1.843e-14 dE/E1=-4.881e-02 t_oneshot=7.345e+00 iters=29 notfound=0
+total wall 25.1 s
+   rc=0  26 s
+== [d] -N 8 -p 2 -field abc -b0 -eps1 0.3 -m2 fine:16 -ops all
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:16
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 1.07455 s
+  [t] mesh state (b0, diag) 4.22079 s
+M1 N8_def0.3f1 detJ [0.901025,1.09897] ND=12288 RT=12288
+M2 N16_uni detJ [1,1] ND=98304 RT=98304
+  [t] M1 projection+diag 2.56351 s
+  [t] M2 reference projections+diag 15.634 s
+  [t] evaluator setup 0.0231593 s
+  [t] A_pt 12.7527 s
+A_pt   errB_rel=3.200e-02 (ref 5.721e-03) div_rel=2.315e-15 dE/E1=3.076e-04 t_oneshot=3.586e+00 iters=0 notfound=0
+  [t] A_int 22.8 s
+A_int  errB_rel=2.513e-02 (ref 5.721e-03) div_rel=2.339e-15 dE/E1=-3.058e-05 t_oneshot=1.400e+01 iters=0 notfound=0
+  [t] A_l2 26.8 s
+A_l2   errB_rel=2.817e-02 (ref 5.721e-03) div_rel=2.323e-15 dE/E1=1.721e-04 t_oneshot=1.698e+01 iters=20 notfound=0
+  [t] B_pt 6.59 s
+B_pt   errB_rel=2.519e-02 (ref 5.721e-03) div_rel=1.303e-02 dE/E1=-2.769e-04 t_oneshot=2.328e+00 iters=0 notfound=0
+  [t] B_int 42.3 s
+B_int  errB_rel=2.375e-02 (ref 5.721e-03) div_rel=3.748e-03 dE/E1=-1.022e-04 t_oneshot=3.859e+01 iters=0 notfound=0
+  [t] B_l2 19.5 s
+B_l2   errB_rel=2.297e-02 (ref 5.721e-03) div_rel=5.767e-03 dE/E1=-1.680e-04 t_oneshot=1.509e+01 iters=10 notfound=0
+  [t] B_l2c 49.3 s
+B_l2c  errB_rel=2.295e-02 (ref 5.721e-03) div_rel=2.497e-15 dE/E1=-1.688e-04 t_oneshot=4.499e+01 iters=32 notfound=0
+total wall 204 s
+   rc=0  204 s
+== [d] -N 8 -p 3 -field abc -b0 -eps1 0.3 -m2 fine:16 -ops all
+Options used:
+   --N 8
+   --order 3
+   --geom-order -1
+   --field abc
+   --b0
+   --eps1 0.3
+   --fv1 1
+   --m2 fine:16
+   --gauge 0
+   --gauge-k 2
+   --ops all
+   --nq -1
+   --gradfrac
+   --csv results/exp3_parts/d.csv
+   --tag d
+  [t] meshes+ops 4.95115 s
+  [t] mesh state (b0, diag) 33.5351 s
+M1 N8_def0.3f1 detJ [0.909777,1.09022] ND=41472 RT=41472
+M2 N16_uni detJ [1,1] ND=331776 RT=331776
+  [t] M1 projection+diag 14.8131 s
+  [t] M2 reference projections+diag 88.6867 s
+  [t] evaluator setup 0.047699 s
+  [t] A_pt 63.0053 s
+A_pt   errB_rel=7.161e-03 (ref 1.900e-04) div_rel=6.225e-15 dE/E1=4.628e-05 t_oneshot=1.604e+01 iters=0 notfound=0
+  [t] A_int 128 s
+A_int  errB_rel=3.128e-03 (ref 1.900e-04) div_rel=6.211e-15 dE/E1=6.724e-06 t_oneshot=7.825e+01 iters=0 notfound=0
+  [t] A_l2 110 s
+A_l2   errB_rel=4.405e-03 (ref 1.900e-04) div_rel=6.232e-15 dE/E1=1.649e-05 t_oneshot=6.131e+01 iters=16 notfound=0
+  [t] B_pt 31.3 s
+B_pt   errB_rel=1.986e-03 (ref 1.900e-04) div_rel=3.906e-03 dE/E1=2.128e-06 t_oneshot=1.126e+01 iters=0 notfound=0
+  [t] B_int 310 s
+B_int  errB_rel=1.662e-03 (ref 1.900e-04) div_rel=1.065e-03 dE/E1=-2.001e-06 t_oneshot=2.895e+02 iters=0 notfound=0
+  [t] B_l2 73.6 s
+B_l2   errB_rel=1.590e-03 (ref 1.900e-04) div_rel=1.912e-03 dE/E1=-3.187e-06 t_oneshot=5.351e+01 iters=10 notfound=0
+  [t] B_l2c 193 s
+B_l2c  errB_rel=1.580e-03 (ref 1.900e-04) div_rel=1.542e-15 dE/E1=-3.222e-06 t_oneshot=1.728e+02 iters=58 notfound=0
+total wall 1.05e+03 s
+   rc=0  1052 s
