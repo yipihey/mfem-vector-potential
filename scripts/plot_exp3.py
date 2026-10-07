@@ -41,7 +41,8 @@ def lines(ax, xs_key, y_fn, base, logy=True, ops=OPS):
 METRICS = [
     ("m2_errB_rel", r"$\|B_2-B\|_{L^2}/\|B\|$", lambda r: r["m2_errB_rel"]),
     ("m2_div_rel_L2", r"$\|D_hb_2\|/(\|B\|/h)$  (divergence)", lambda r: max(r["m2_div_rel_L2"], 1e-17)),
-    ("dE", r"$|E_2-E_1|/E_1$", lambda r: max(abs(r["m2_dE_rel1"]), 1e-12)),
+    ("dE", r"$|E_2-E_{ref}|/E_{ref}$ (energy of projection of exact B on M2)",
+     lambda r: max(abs((r["m2_energy"] - r["ref_A_energy"]) / r["ref_A_energy"]), 1e-12)),
     ("t", "one-shot time per remap [s]  (setup + apply)", lambda r: r["t_oneshot"]),
 ]
 
@@ -79,7 +80,7 @@ for ax, gk in zip(axs, (2.0, 6.0)):
         if s:
             ax.semilogy([r["p"] for r in s], [r["pollution_B"] for r in s], LS[op], marker=MK[op], color=COL[op], label=op)
     ax.set_xlabel("p"); ax.set_xticks([1, 2, 3]); ax.grid(True, which="both", alpha=0.3)
-    ax.set_title(f"gauge g=0.5, k={int(gk/2)}pi ({'smooth' if gk == 2 else 'rough'})")
+    ax.set_title(f"gauge g=0.5, k={int(gk)}pi ({'smooth' if gk == 2 else 'rough'})")
     ax.set_ylabel(r"$\|b_2(A+\nabla\chi)-b_2(A)\|/\|b_2\|$")
 axs[0].legend()
 fig.tight_layout(); fig.savefig(prefix + "_gauge.png", dpi=140); plt.close(fig); print("wrote gauge")

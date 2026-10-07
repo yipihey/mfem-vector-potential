@@ -3,7 +3,8 @@
 #   s1: field abc, no B0 (helicity), p=1,2,3, n=100, all 7 ops, diagnostics every 5 steps
 #   s2: field abc WITH B0, p=2, n=100, all ops
 #   s3: long run n=400, p=2, ops A_int,A_pt,B_int,B_l2c, diagnostics every 20 steps (no B0)
-# Usage: scripts/run_exp4.sh [parts...]  parts: s1_p1 s1_p2 s1_p3 s2 s3   (default: all, serial)
+#   s3b: long run n=400, p=2, ops A_l2,B_l2 (added after s3 showed gauge growth of A_int), every 20 steps
+# Usage: scripts/run_exp4.sh [parts...]  parts: s1_p1 s1_p2 s1_p3 s2 s3 s3b   (default: all, serial)
 # Each part appends to results/exp4_parts/<part>.csv; scripts/merge_csv.py merges into results/exp4_repeat.csv
 set -u
 cd "$(dirname "$0")/.."
@@ -30,6 +31,7 @@ for part in $PARTS; do
     s1_p3) run $part -N 8 -p 3 -field abc -no-b0 -epsB 0.3 -n ${N1:-100} -every 5 -ops all ;;
     s2)    run $part -N 8 -p 2 -field abc -b0 -epsB 0.3 -n ${N1:-100} -every 5 -ops all ;;
     s3)    run $part -N 8 -p 2 -field abc -no-b0 -epsB 0.3 -n ${N3:-400} -every 20 -ops A_int,A_pt,B_int,B_l2c ;;
+    s3b)   run $part -N 8 -p 2 -field abc -no-b0 -epsB 0.3 -n ${N3:-400} -every 20 -ops A_l2,B_l2 ;;
     *) echo "unknown part $part" ;;
   esac
 done

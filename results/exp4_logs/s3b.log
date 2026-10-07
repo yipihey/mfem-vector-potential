@@ -1,0 +1,29 @@
+== [s3b] -N 8 -p 2 -field abc -no-b0 -epsB 0.3 -n 400 -every 20 -ops A_l2,B_l2
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --no-b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 400
+   --every 20
+   --ops A_l2,B_l2
+   --nq -1
+   --gradfrac
+   --csv results/exp4_parts/s3b.csv
+   --tag s3b
+N=8 p=2 q=2  A: N8_uni  B: N8_def0.3f1  ND=12288 RT=12288  n=400
+A_l2 step    1 B  E/E0=1.000e+00 errB=3.338e-02 div_rel=1.219e-15 |a|=1.414e+00 H/H0=9.999e-01 t_cum=7.141e-01
+A_l2 step  200 A  E/E0=1.042e+00 errB=2.206e-01 div_rel=1.228e-15 |a|=1.411e+00 H/H0=9.933e-01 t_cum=1.227e+02
+A_l2 step  400 A  E/E0=1.582e+00 errB=7.680e-01 div_rel=1.299e-15 |a|=1.430e+00 H/H0=9.883e-01 t_cum=2.449e+02
+A_l2 done: setup 1.06 s, transfers 245 s (0.612 s/remap), diagnostics 33.9 s, wall 280 s, not found 0
+B_l2 step    1 B  E/E0=9.995e-01 errB=2.742e-02 div_rel=2.866e-02 |a|=nan H/H0=0.000e+00 t_cum=5.300e-01
+B_l2 step  200 A  E/E0=9.677e-01 errB=1.759e-01 div_rel=3.421e-01 |a|=nan H/H0=0.000e+00 t_cum=9.809e+01
+B_l2 step  400 A  E/E0=1.117e+00 errB=3.747e-01 div_rel=8.106e-01 |a|=nan H/H0=0.000e+00 t_cum=1.974e+02
+B_l2 done: setup 1 s, transfers 197 s (0.493 s/remap), diagnostics 26.2 s, wall 225 s, not found 0
+total wall 508 s
+   rc=0  509 s

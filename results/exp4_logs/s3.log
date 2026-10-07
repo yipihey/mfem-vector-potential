@@ -1,0 +1,37 @@
+== [s3] -N 8 -p 2 -field abc -no-b0 -epsB 0.3 -n 400 -every 20 -ops A_int,A_pt,B_int,B_l2c
+Options used:
+   --N 8
+   --order 2
+   --geom-order -1
+   --field abc
+   --no-b0
+   --epsA 0
+   --fvA 1
+   --epsB 0.3
+   --fvB 1
+   --n 400
+   --every 20
+   --ops A_int,A_pt,B_int,B_l2c
+   --nq -1
+   --gradfrac
+   --csv results/exp4_parts/s3.csv
+   --tag s3
+N=8 p=2 q=2  A: N8_uni  B: N8_def0.3f1  ND=12288 RT=12288  n=400
+A_int step    1 B  E/E0=9.996e-01 errB=2.945e-02 div_rel=1.218e-15 |a|=1.413e+00 H/H0=9.992e-01 t_cum=2.715e-01
+A_int step  200 A  E/E0=1.228e+00 errB=4.888e-01 div_rel=1.269e-15 |a|=1.464e+00 H/H0=9.914e-01 t_cum=6.713e+01
+A_int step  400 A  E/E0=1.765e+03 errB=4.200e+01 div_rel=3.554e-14 |a|=3.562e+01 H/H0=-5.746e-01 t_cum=1.330e+02
+A_int done: setup 1.05 s, transfers 133 s (0.332 s/remap), diagnostics 34.4 s, wall 168 s, not found 0
+A_pt step    1 B  E/E0=9.996e-01 errB=2.946e-02 div_rel=1.222e-15 |a|=1.413e+00 H/H0=9.993e-01 t_cum=8.355e-02
+A_pt step  200 A  E/E0=6.351e+34 errB=2.520e+17 div_rel=1.301e+02 |a|=9.134e+16 H/H0=5.335e+31 t_cum=1.616e+01
+A_pt step  400 A  E/E0=2.101e+76 errB=1.449e+38 div_rel=7.403e+22 |a|=5.163e+37 H/H0=2.284e+73 t_cum=3.251e+01
+A_pt done: setup 0.302 s, transfers 32.5 s (0.0813 s/remap), diagnostics 34.2 s, wall 67 s, not found 0
+B_int step    1 B  E/E0=9.997e-01 errB=2.952e-02 div_rel=4.853e-03 |a|=nan H/H0=0.000e+00 t_cum=8.713e-01
+B_int step  200 A  E/E0=3.612e+08 errB=1.900e+04 div_rel=2.819e+04 |a|=nan H/H0=0.000e+00 t_cum=1.641e+02
+B_int step  400 A  E/E0=8.046e+21 errB=8.969e+10 div_rel=1.367e+11 |a|=nan H/H0=0.000e+00 t_cum=3.235e+02
+B_int done: setup 3.04 s, transfers 323 s (0.809 s/remap), diagnostics 25.6 s, wall 352 s, not found 0
+B_l2c step    1 B  E/E0=9.995e-01 errB=2.769e-02 div_rel=1.334e-14 |a|=nan H/H0=0.000e+00 t_cum=5.500e+00
+B_l2c step  200 A  E/E0=9.064e-01 errB=1.426e-01 div_rel=8.857e-15 |a|=nan H/H0=0.000e+00 t_cum=7.856e+02
+B_l2c step  400 A  E/E0=8.875e-01 errB=2.332e-01 div_rel=9.927e-15 |a|=nan H/H0=0.000e+00 t_cum=1.373e+03
+B_l2c done: setup 0.847 s, transfers 1.37e+03 s (3.43 s/remap), diagnostics 23.4 s, wall 1.4e+03 s, not found 0
+total wall 1.99e+03 s
+   rc=0  1989 s
