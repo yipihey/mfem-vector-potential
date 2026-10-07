@@ -1,0 +1,1 @@
+A_int N=32 p=2 np=1 ND=786432  build 3.326  evsetup 0.3853  plan 26.12 (collect 3.332 find 22.79)  eval 7.418  dofs 2.396  solve 0 (its 0/0)  gauge 0.7716 (20)  curl 0.004404  steady 10.59  oneshot 37.1  peak 5462 MB/rank, 5462 MB total  errB_rel 0.001886

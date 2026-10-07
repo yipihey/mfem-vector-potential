@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
    const int rank = Mpi::WorldRank();
 
    int N = 8, p = 2, q = -1, reps = 2, nq = -1;
+   double slow = 90.0;
    real_t epsB = 0.3;
    std::string field = "abc", opstr = "A_int", csv, tag, gaugestr = "none";
    OptionsParser args(argc, argv);
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
    args.AddOption(&nq, "-nq", "--nq", "Gauss points per direction for *_int.");
    args.AddOption(&gaugestr, "-gauge", "--gauge", "none | coulomb | jacobi:k (A-route only).");
    args.AddOption(&reps, "-reps", "--reps", "Timed repetitions of the apply/gauge/curl stages (min kept).");
+   args.AddOption(&slow, "-slow", "--slow", "If the first Apply takes longer than this (s), only 1 timed repetition.");
    args.AddOption(&csv, "-csv", "--csv", "Append the row to this CSV file.");
    args.AddOption(&tag, "-tag", "--tag", "Series label.");
    args.Parse();
@@ -186,6 +188,8 @@ int main(int argc, char *argv[])
       a_first = Toc(ta);
    }
    row.Set("t_apply_first", a_first);
+   if (a_first > slow) { reps = 1; }   // very slow case: one timed repetition only
+   row.Set("reps_eff", reps);
    double best = 1e300, b_eval = 0, b_dofs = 0, b_solve = 0;
    int its = 0, its_l2 = 0, inner = 0, rounds = 0;
    double div_before = std::nan("");

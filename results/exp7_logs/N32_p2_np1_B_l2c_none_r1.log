@@ -1,0 +1,1 @@
+B_l2c N=32 p=2 np=1 ND=786432  build 3.641  evsetup 0.4112  plan 26.47 (collect 0.8347 find 24.44)  eval 7.579  dofs 4.81  solve 151.8 (its 34/630)  gauge 0 (0)  curl 0  steady 164.2  oneshot 191  peak 3019 MB/rank, 3019 MB total  errB_rel 0.001653

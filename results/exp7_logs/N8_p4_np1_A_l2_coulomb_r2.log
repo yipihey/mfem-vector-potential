@@ -1,0 +1,1 @@
+A_l2 N=8 p=4 np=1 ND=98304  build 0.8233  evsetup 0.02255  plan 4.198 (collect 0.184 find 3.939)  eval 1.926  dofs 1.325  solve 0.2217 (its 13/0)  gauge 1.11 (22)  curl 0.0007693  steady 4.584  oneshot 8.805  peak 1799 MB/rank, 1799 MB total  errB_rel 0.0003648
