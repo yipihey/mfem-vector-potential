@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
       Vector dv;
       const DivDiag dd = DivergenceDiag(*ops2, b_t);
       row.Set("div_max", (double)dd.maxabs);
-      if (!std::isnan(div_before)) { row.Set("div_before_clean", div_before); }
+      row.Set("div_before_clean", div_before);
    }
    if (!csv.empty()) { CsvAppend(comm, csv, row); }
    if (rank == 0)
